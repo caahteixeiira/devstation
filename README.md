@@ -1,2 +1,31 @@
-# devstation
-O DevStation é uma plataforma pessoal de engenharia de software que demonstra, de forma prática, como desenvolve, documenta, testa e evolui sistemas. Diferente de um portfólio tradicional, ele apresenta não apenas os resultados, mas também o processo, as decisões técnicas e a evolução contínua do produto.
+# DevStation 🚀
+
+> Uma plataforma pessoal de engenharia
+> que documenta problemas, decisões e soluções
+> por trás do desenvolvimento de software.
+
+## Sobre
+
+O DevStation não é apenas um portfólio.
+É um laboratório de engenharia onde cada projeto
+é apresentado desde sua origem:
+
+- Problema
+- Análise
+- Arquitetura
+- Implementação
+- Aprendizados
+
+## Arquitetura
+
+Frontend:
+Next.js
+
+Backend:
+Fastify
+
+Database:
+PostgreSQL
+
+Architecture:
+Modular Monolith
