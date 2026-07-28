@@ -1,4 +1,5 @@
 import { PageIntro } from "@/components/layout/PageIntro";
+import Link from "next/link";
 
 const projects = [
   {
@@ -7,6 +8,7 @@ const projects = [
       "Aplicação para registrar, distribuir e acompanhar chamados internos, com atribuição automática baseada na carga de trabalho dos responsáveis.",
     technologies: ["PHP", "Laravel", "Vue.js", "Inertia.js", "SQLite"],
     status: "Concluído",
+    detailsUrl: "/projetos/sistema-de-chamados",
     repository: "https://github.com/caahteixeiira/sistema-chamados-interno",
   },
 ];
@@ -46,14 +48,23 @@ export default function ProjetosPage() {
                 </li>
               ))}
             </ul>
-            <a
-              href={project.repository}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
-            >
-              Ver código no GitHub →
-            </a>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href={project.detailsUrl}
+                className="inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+              >
+                Ver detalhes →
+              </Link>
+
+              <a
+                href={project.repository}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex rounded-lg border border-border px-4 py-2 font-medium transition hover:border-primary-strong hover:text-primary-strong"
+              >
+                Ver código no GitHub →
+              </a>
+            </div>
           </article>
         ))}
       </div>
