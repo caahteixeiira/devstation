@@ -1,12 +1,15 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
 # Next.js
 .next/
+**/.next/
 out/
 
 # Turborepo
 .turbo/
+**/.turbo/
 
 # Environment variables
 .env
@@ -16,6 +19,6 @@ out/
 # Logs
 *.log
 
-# Operating system
+# System files
 .DS_Store
 Thumbs.db
