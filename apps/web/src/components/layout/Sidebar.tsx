@@ -2,17 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navigationItems = [
-  { href: "/", label: "Painel", icon: "⌂" },
-  { href: "/engenharia", label: "Engenharia", icon: "⚙" },
-  { href: "/projetos", label: "Projetos", icon: "📁" },
-  { href: "/artigos", label: "Artigos", icon: "📚" },
-  { href: "/laboratorio", label: "Laboratório", icon: "🧪" },
-  { href: "/roadmap", label: "Planejamento", icon: "🗺" },
-  { href: "/sobre", label: "Sobre", icon: "👩" },
-  { href: "/contato", label: "Contato", icon: "✉" },
-];
+import { navigationItems } from "./navigation";
 
 const linkStyles =
   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
