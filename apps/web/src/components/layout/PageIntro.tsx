@@ -19,8 +19,8 @@ export function PageIntro({
     accent === "accent" ? "text-accent-strong" : "text-primary-strong";
 
   return (
-    <main className="flex flex-1 px-6 py-16">
-      <section className="mx-auto w-full max-w-5xl">
+    <main className="flex flex-1 px-6 py-16 lg:px-10">
+      <section className="mx-auto w-full max-w-7xl">
         <p
           className={`font-mono text-sm uppercase tracking-widest ${eyebrowColor}`}
         >
@@ -29,7 +29,7 @@ export function PageIntro({
 
         <h1 className="mt-4 text-4xl font-semibold tracking-tight">{title}</h1>
 
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground-muted">
+        <p className="mt-6 max-w-3xl text-lg leading-8 text-foreground-muted">
           {description}
         </p>
 

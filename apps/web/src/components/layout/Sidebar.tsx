@@ -11,7 +11,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden min-h-screen w-64 shrink-0 border-r border-border bg-surface px-4 py-6 md:flex md:flex-col">
+    <aside className="hidden min-h-screen w-56 shrink-0 border-r border-border bg-surface px-4 py-6 md:flex md:flex-col">
       <Link
         href="/"
         className="rounded-sm px-3 font-mono text-lg font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong"
