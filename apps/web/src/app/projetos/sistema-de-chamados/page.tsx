@@ -28,6 +28,28 @@ export default function SistemaDeChamadosPage() {
           </p>
         </article>
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold">Principais funcionalidades</h2>
+
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          {[
+            "Cadastro, visualização, edição e exclusão de chamados.",
+            "Classificação por prioridade e status.",
+            "Definição manual do responsável pelo chamado.",
+            "Atribuição automática baseada na carga de trabalho.",
+            "Filtros para facilitar a localização dos chamados.",
+            "Acompanhamento das solicitações em aberto.",
+          ].map((functionality) => (
+            <li
+              key={functionality}
+              className="rounded-xl border border-border bg-surface p-4 leading-7 text-foreground-muted"
+            >
+              {functionality}
+            </li>
+          ))}
+        </ul>
+      </section>
     </PageIntro>
   );
 }
