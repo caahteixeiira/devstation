@@ -43,7 +43,7 @@ export default function EngenhariaPage() {
             <p className="font-mono text-sm text-primary-strong">apps/api</p>
 
             <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
-              Implementado
+              Planejado
             </span>
           </div>
 
@@ -60,7 +60,7 @@ export default function EngenhariaPage() {
             <p className="font-mono text-sm text-primary-strong">packages/</p>
 
             <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
-              Implementado
+              Planejado
             </span>
           </div>
 
@@ -78,7 +78,7 @@ export default function EngenhariaPage() {
             <p className="font-mono text-sm text-primary-strong">docs/</p>
 
             <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
-              Implementado
+              Planejado
             </span>
           </div>
 
@@ -166,6 +166,10 @@ export default function EngenhariaPage() {
 
             <h3 className="mt-2 text-lg font-semibold">Lint</h3>
 
+            <span className="mt-3 inline-block rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
+              Implementado
+            </span>
+
             <p className="mt-3 leading-7 text-foreground-muted">
               Verifica padrões de código, identifica possíveis problemas e
               mantém a escrita consistente entre as aplicações.
@@ -178,7 +182,9 @@ export default function EngenhariaPage() {
             </p>
 
             <h3 className="mt-2 text-lg font-semibold">Testes unitários</h3>
-
+            <span className="mt-3 inline-block rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
+              Planejado
+            </span>
             <p className="mt-3 leading-7 text-foreground-muted">
               Validam funções, regras de negócio e outros comportamentos
               pequenos sem depender do restante do sistema.
@@ -192,6 +198,9 @@ export default function EngenhariaPage() {
 
             <h3 className="mt-2 text-lg font-semibold">Testes de integração</h3>
 
+            <span className="mt-3 inline-block rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
+              Planejado
+            </span>
             <p className="mt-3 leading-7 text-foreground-muted">
               Verificam se componentes, serviços, rotas e banco de dados
               funcionam corretamente quando utilizados em conjunto.
@@ -205,9 +214,80 @@ export default function EngenhariaPage() {
 
             <h3 className="mt-2 text-lg font-semibold">Testes end-to-end</h3>
 
+            <span className="mt-3 inline-block rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
+              Planejado
+            </span>
             <p className="mt-3 leading-7 text-foreground-muted">
               Simulam no navegador os fluxos mais importantes do DevStation,
               desde a navegação até a conclusão de uma ação.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section className="mt-12 rounded-2xl border border-border bg-surface p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="font-mono text-sm uppercase tracking-widest text-primary-strong">
+              Observabilidade
+            </p>
+
+            <h2 className="mt-2 text-2xl font-semibold">
+              Entendendo o comportamento do sistema
+            </h2>
+          </div>
+
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-mono text-xs text-primary-strong">
+            Planejado
+          </span>
+        </div>
+
+        <p className="mt-4 max-w-3xl leading-7 text-foreground-muted">
+          A observabilidade permitirá acompanhar o funcionamento do DevStation,
+          investigar falhas e compreender o impacto de cada problema. A
+          estratégia começará com logs, métricas e monitoramento de erros,
+          evoluindo para rastreamentos quando a API estiver implementada.
+        </p>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <article className="rounded-xl border border-border bg-surface-muted p-5">
+            <p className="font-mono text-sm text-primary-strong">
+              O que aconteceu?
+            </p>
+
+            <h3 className="mt-2 text-lg font-semibold">Logs</h3>
+
+            <p className="mt-3 leading-7 text-foreground-muted">
+              Registrarão acontecimentos relevantes, requisições recebidas,
+              operações concluídas e falhas encontradas durante a execução.
+            </p>
+          </article>
+
+          <article className="rounded-xl border border-border bg-surface-muted p-5">
+            <p className="font-mono text-sm text-primary-strong">
+              Qual foi o impacto?
+            </p>
+
+            <h3 className="mt-2 text-lg font-semibold">Métricas</h3>
+
+            <p className="mt-3 leading-7 text-foreground-muted">
+              Acompanharão valores como quantidade de acessos, tempo de
+              resposta, taxa de erros e desempenho das principais operações.
+            </p>
+          </article>
+
+          <article className="rounded-xl border border-border bg-surface-muted p-5 sm:col-span-2 lg:col-span-1">
+            <p className="font-mono text-sm text-primary-strong">
+              Onde ocorreu a falha?
+            </p>
+
+            <h3 className="mt-2 text-lg font-semibold">
+              Monitoramento de erros
+            </h3>
+
+            <p className="mt-3 leading-7 text-foreground-muted">
+              Permitirá identificar exceções, reunir informações para
+              diagnóstico e compreender quais usuários e funcionalidades foram
+              afetados.
             </p>
           </article>
         </div>
