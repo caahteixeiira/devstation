@@ -41,7 +41,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-foreground-muted">
-            Não é apenas um currículo; é um ecossistema de projetos, estudos e
+            Não é apenas um currículo é um ecossistema de projetos, estudos e
             decisões de engenharia.
           </p>
         </div>
