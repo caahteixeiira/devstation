@@ -1,4 +1,5 @@
 import type { Article } from "./articles";
+import Link from "next/link";
 
 type ArticleCardProps = {
   article: Article;
@@ -6,6 +7,7 @@ type ArticleCardProps = {
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
+    <Link href={`/artigos/${article.slug}`}>
     <article className="rounded-2xl border border-border bg-surface p-6">
       <div className="mb-4 flex flex-wrap items-center gap-2 text-sm">
         <span className="text-primary-strong">
@@ -24,6 +26,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <p className="mt-3 text-foreground-muted">
         {article.summary}
       </p>
-    </article>
+     </article>
+</Link>
   );
 }
