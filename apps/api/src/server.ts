@@ -1,5 +1,7 @@
 import Fastify from "fastify";
 
+import { projectRoutes } from "./modules/projects/project.routes.js";
+
 const app = Fastify({
   logger: true,
 });
@@ -9,6 +11,8 @@ app.get("/health", async () => {
     status: "ok",
   };
 });
+
+await app.register(projectRoutes);
 
 const start = async () => {
   try {
