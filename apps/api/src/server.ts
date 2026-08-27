@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-
+import { AppError } from "./errors/AppError.js";
 import { projectRoutes } from "./modules/projects/project.routes.js";
 
 const app = Fastify({
@@ -25,5 +25,19 @@ const start = async () => {
     process.exit(1);
   }
 };
+
+app.setErrorHandler((error, _request, reply) => {
+  if (error instanceof AppError) {
+    return reply.status(error.statusCode).send({
+      message: error.message,
+    });
+  }
+
+  app.log.error(error);
+
+  return reply.status(500).send({
+    message: "Internal server error.",
+  });
+});
 
 start();

@@ -70,3 +70,68 @@ export async function findProjectBySlug(slug: string) {
     },
   });
 }
+import type { CreateProjectBody } from "./project.schema.js";
+
+export async function createProject(data: CreateProjectBody) {
+  const { technologyIds, ...projectData } = data;
+
+  return prisma.project.create({
+    data: {
+      ...projectData,
+
+      technologies: {
+        connect: technologyIds.map((id) => ({
+          id,
+        })),
+      },
+    },
+
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      summary: true,
+      status: true,
+      githubUrl: true,
+      demoUrl: true,
+
+      technologies: {
+        select: {
+          id: true,
+          name: true,
+          category: true,
+        },
+      },
+
+      createdAt: true,
+    },
+  });
+}
+
+export async function findTechnologyIds(ids: number[]) {
+  const technologies = await prisma.technology.findMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return technologies.map((technology) => technology.id);
+}
+
+export async function projectExistsBySlug(slug: string) {
+  const project = await prisma.project.findUnique({
+    where: {
+      slug,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return project !== null;
+}
