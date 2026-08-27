@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_DEVELOPMENT
+  COMPLETED
+  ARCHIVED
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ExperimentStatus {
+  IDEA
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RoadmapStatus {
+  NOW
+  NEXT
+  FUTURE
+  COMPLETED
+}
+
+enum UserRole {
+  ADMIN
+}
+
+model Project {
+  id           Int           @id @default(autoincrement())
+  title        String
+  slug         String        @unique
+  summary      String
+  problem      String
+  solution     String
+  architecture String
+  status       ProjectStatus
+
+  githubUrl String?
+  demoUrl   String?
+
+  technologies Technology[]
+  features     ProjectFeature[]
+  improvements ProjectImprovement[]
+  images       ProjectImage[]
+  decisions    Decision[]
+  articles     Article[]
+  experiments  Experiment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+model Technology {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  category String
+
+  projects    Project[]
+  experiments Experiment[]
+  experiences Experience[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectFeature {
+  id          Int    @id @default(autoincrement())
+  projectId   Int
+  title       String
+  description String
+  order       Int
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, order])
+}
+
+model ProjectImprovement {
+  id          Int    @id @default(autoincrement())
+  projectId   Int
+  description String
+  order       Int
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, order])
+}
+
+model ProjectImage {
+  id        Int    @id @default(autoincrement())
+  projectId Int
+  imageUrl  String
+  altText   String
+  order     Int
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, order])
+}
+
+model Decision {
+  id           Int    @id @default(autoincrement())
+  projectId    Int
+  title        String
+  context      String
+  decision     String
+  consequences String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Article {
+  id          Int           @id @default(autoincrement())
+  projectId   Int
+  title       String
+  slug        String        @unique
+  summary     String
+  content     String
+  category    String
+  status      ArticleStatus
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Experiment {
+  id        Int              @id @default(autoincrement())
+  projectId Int?
+  title     String
+  objective String
+  result    String?
+  status    ExperimentStatus
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  project      Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  technologies Technology[]
+}
+
+model RoadmapItem {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String
+  status      RoadmapStatus
+  order       Int
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status, order])
+}
+
+model Experience {
+  id          Int       @id @default(autoincrement())
+  company     String
+  role        String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+
+  responsibilities ExperienceResponsibility[]
+  achievements     ExperienceAchievement[]
+  technologies     Technology[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExperienceResponsibility {
+  id           Int    @id @default(autoincrement())
+  experienceId Int
+  description  String
+  order        Int
+
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([experienceId, order])
+}
+
+model ExperienceAchievement {
+  id           Int    @id @default(autoincrement())
+  experienceId Int
+  description  String
+  order        Int
+
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([experienceId, order])
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(ADMIN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

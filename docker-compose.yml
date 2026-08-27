@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: devstation-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: devstation
+      POSTGRES_PASSWORD: devstation
+      POSTGRES_DB: devstation
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - devstation_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  devstation_postgres_data:
