@@ -25,3 +25,48 @@ export async function findAllProjects() {
     },
   });
 }
+
+export async function findProjectBySlug(slug: string) {
+  return prisma.project.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      technologies: {
+  select: {
+    id: true,
+    name: true,
+    category: true,
+  },
+},
+      features: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+      improvements: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+      images: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+      decisions: true,
+      articles: true,
+      experiments: {
+        include: {
+          technologies: {
+  select: {
+    id: true,
+    name: true,
+    category: true,
+  },
+},
+        },
+      },
+    },
+  });
+}
