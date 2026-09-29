@@ -1,4 +1,3 @@
-import { number } from "zod";
 import { AppError } from "../../errors/AppError.js";
 import {
   createTechnology,
