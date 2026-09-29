@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import { AppError } from "./errors/AppError.js";
 import { projectRoutes } from "./modules/projects/project.routes.js";
+import { technologyRoutes } from "./modules/technologies/technology.routes.js";
 
 const app = Fastify({
   logger: true,
@@ -13,6 +14,9 @@ app.get("/health", async () => {
 });
 
 await app.register(projectRoutes);
+await app.register(technologyRoutes);
+
+
 
 const start = async () => {
   try {

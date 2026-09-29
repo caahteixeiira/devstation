@@ -1,4 +1,10 @@
 import { prisma } from "../../lib/prisma.js";
+import type {
+  CreateProjectBody,
+  UpdateProjectBody,
+} from "./project.schema.js";
+
+
 
 export async function findAllProjects() {
   return prisma.project.findMany({
@@ -70,7 +76,6 @@ export async function findProjectBySlug(slug: string) {
     },
   });
 }
-import type { CreateProjectBody } from "./project.schema.js";
 
 export async function createProject(data: CreateProjectBody) {
   const { technologyIds, ...projectData } = data;
@@ -134,4 +139,57 @@ export async function projectExistsBySlug(slug: string) {
   });
 
   return project !== null;
+}
+
+export async function updateProjectBySlug(
+  slug: string,
+  data: UpdateProjectBody,
+) {
+  const { technologyIds, ...projectData } = data;
+
+  return prisma.project.update({
+    where: {
+      slug,
+    },
+
+    data: {
+      ...projectData,
+
+      ...(technologyIds !== undefined && {
+        technologies: {
+          set: technologyIds.map((id) => ({
+            id,
+          })),
+        },
+      }),
+    },
+
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      summary: true,
+      status: true,
+      githubUrl: true,
+      demoUrl: true,
+
+      technologies: {
+        select: {
+          id: true,
+          name: true,
+          category: true,
+        },
+      },
+
+      updatedAt: true,
+    },
+  });
+}
+
+export async function deleteProjectBySlug(slug: string) {
+  return prisma.project.delete({
+    where: {
+      slug,
+    },
+  });
 }
