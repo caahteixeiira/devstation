@@ -23,24 +23,14 @@ export const articleSlugParamsSchema = z.object({
   slug: slugSchema,
 });
 
-export const updateArticleBodySchema =
-  createArticleBodySchema.partial().refine(
-    (data) => Object.keys(data).length > 0,
-    {
-      message: "At least one field must be provided.",
-    },
-  );
+export const updateArticleBodySchema = createArticleBodySchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided.",
+  });
 
+export type CreateArticleBody = z.infer<typeof createArticleBodySchema>;
 
+export type ArticleSlugParams = z.infer<typeof articleSlugParamsSchema>;
 
-export type CreateArticleBody = z.infer< 
-typeof createArticleBodySchema
->;
-
-export type ArticleSlugParams = z.infer<
-  typeof articleSlugParamsSchema
->;
-
-export type UpdateArticleBody = z.infer<
-  typeof updateArticleBodySchema
->;
+export type UpdateArticleBody = z.infer<typeof updateArticleBodySchema>;

@@ -4,20 +4,36 @@ import {
   projectExistsById,
   articleExistsBySlug,
   createArticle,
+  findAllArticles,
 } from "./article.repository.js";
 
 import type { CreateArticleBody } from "./article.schema.js";
 
 export async function createNewArticle(data: CreateArticleBody) {
-  const articleAlreadyExists = await projectExistsById(data.projectId)
+  const projectExists = await projectExistsById(data.projectId);
 
-  if(articleAlreadyExists) {
-    throw new AppError("Article already exists.", 404)
+  if (!projectExists) {
+    throw new AppError("Project not found.", 404);
   }
-  return createNewArticle(data);
+
+  const articleAlreadyExists = await articleExistsBySlug(data.slug);
+
+  if (articleAlreadyExists) {
+    throw new AppError("Slug already exists.", 409);
+  }
+
+  if (data.status === "ARCHIVED") {
+    throw new AppError("Article cannot be created as archived.", 400);
+  }
+
+  const publishedAt = data.status === "PUBLISHED" ? new Date() : null;
+
+  return createArticle({
+    ...data,
+    publishedAt,
+  });
 }
 
-export async function getProjectBySlug(slug: string) {
-  return articleExistsBySlug(slug);
+export async function listArticles() {
+  return findAllArticles();
 }
-
