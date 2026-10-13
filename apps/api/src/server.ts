@@ -3,10 +3,13 @@ import { AppError } from "./errors/AppError.js";
 import { projectRoutes } from "./modules/projects/project.routes.js";
 import { technologyRoutes } from "./modules/technologies/technology.routes.js";
 import { articlesRoutes } from "./modules/articles/article.routes.js";
+import helmet from "@fastify/helmet";
 
 const app = Fastify({
   logger: true,
 });
+
+await app.register(helmet);
 
 app.get("/health", async () => {
   return {
