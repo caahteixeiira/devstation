@@ -4,12 +4,18 @@ import { projectRoutes } from "./modules/projects/project.routes.js";
 import { technologyRoutes } from "./modules/technologies/technology.routes.js";
 import { articlesRoutes } from "./modules/articles/article.routes.js";
 import helmet from "@fastify/helmet";
+import cors from "@fastify/cors";
 
 const app = Fastify({
   logger: true,
 });
 
 await app.register(helmet);
+
+await app.register(cors, {
+  origin: "http://localhost:3000",
+  methods: ["GET", "HEAD", "POST", "PATCH", "DELETE"],
+});
 
 app.get("/health", async () => {
   return {
