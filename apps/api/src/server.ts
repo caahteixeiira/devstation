@@ -5,6 +5,7 @@ import { technologyRoutes } from "./modules/technologies/technology.routes.js";
 import { articlesRoutes } from "./modules/articles/article.routes.js";
 import helmet from "@fastify/helmet";
 import cors from "@fastify/cors";
+import { experiencesRoutes } from "./modules/experiences/experience.routes.js";
 
 const app = Fastify({
   logger: true,
@@ -26,6 +27,7 @@ app.get("/health", async () => {
 await app.register(projectRoutes);
 await app.register(technologyRoutes);
 await app.register(articlesRoutes);
+await app.register(experiencesRoutes);
 
 const start = async () => {
   try {
