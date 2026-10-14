@@ -210,7 +210,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   </p>
 
                   <h3 className="mt-2 text-xl font-semibold">
-                    {article.title}
+                    <Link
+                      href={`/artigos/${encodeURIComponent(article.slug)}`}
+                      className="hover:text-primary-strong hover:underline"
+                    >
+                      {article.title}
+                    </Link>
                   </h3>
 
                   <p className="mt-2 leading-7 text-foreground-muted">

@@ -1,21 +1,15 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-
-import { articles } from "@/app/features/articles/articles";
+import { MarkdownContent } from "@/components/content/MarkdownContent";
+import { getArticleBySlug } from "@/services/articles.service";
 
 type ArticlePageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>;
 };
 
-export default async function ArticlePage({
-  params,
-}: ArticlePageProps) {
+export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-
-  const article = articles.find(
-    (article) => article.slug === slug,
-  );
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();
@@ -23,10 +17,21 @@ export default async function ArticlePage({
 
   return (
     <main className="flex flex-1 px-6 py-16">
-      <article className="mx-auto w-full max-w-3xl">
-        <p className="font-mono text-sm uppercase tracking-widest text-primary-strong">
-          {article.category} · {article.project}
+      <article className="mx-auto w-full min-w-0 max-w-3xl">
+        <Link href="/artigos" className="text-primary-strong hover:underline">
+          ← Voltar aos artigos
+        </Link>
+
+        <p className="mt-8 font-mono text-sm uppercase tracking-widest text-primary-strong">
+          {article.category}
         </p>
+
+        <Link
+          href={`/projetos/${encodeURIComponent(article.project.slug)}`}
+          className="mt-2 inline-block text-sm text-foreground-muted hover:text-primary-strong"
+        >
+          Projeto: {article.project.title}
+        </Link>
 
         <h1 className="mt-4 text-4xl font-semibold text-foreground">
           {article.title}
@@ -36,47 +41,9 @@ export default async function ArticlePage({
           {article.summary}
         </p>
 
-        <section className="mt-12 space-y-10">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">
-              Contexto
-            </h2>
-
-            <p className="mt-4 leading-7 text-foreground-muted">
-              {article.introduction}
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">
-              Por que essa tecnologia?
-            </h2>
-
-            <p className="mt-4 leading-7 text-foreground-muted">
-              {article.why}
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">
-              Como foi aplicada
-            </h2>
-
-            <p className="mt-4 leading-7 text-foreground-muted">
-              {article.application}
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">
-              O que aprendi
-            </h2>
-
-            <p className="mt-4 leading-7 text-foreground-muted">
-              {article.learning}
-            </p>
-          </div>
-        </section>
+        <div className="mt-12">
+          <MarkdownContent content={article.content} />
+        </div>
       </article>
     </main>
   );
