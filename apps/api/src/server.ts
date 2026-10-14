@@ -9,11 +9,28 @@ import { experiencesRoutes } from "./modules/experiences/experience.routes.js";
 import { roadmapRoutes } from "./modules/roadmap/roadmap.routes.js";
 import { experimentsRoutes } from "./modules/experiments/experiment.routes.js";
 import { decisionsRoutes } from "./modules/decisions/decision.routes.js";
+import jwt from "@fastify/jwt";
+import { authConfig } from "./config/auth.js";
+import { authRoutes } from "./modules/auth/auth.routes.js";
 
 const app = Fastify({
   logger: true,
 });
 
+app.decorateRequest("authUser", null);
+
+await app.register(jwt, {
+  secret: authConfig.secret,
+  sign: {
+    algorithm: "HS256",
+    expiresIn: 3600,
+  },
+  verify: {
+    algorithms: ["HS256"],
+  },
+});
+
+await app.register(authRoutes);
 await app.register(helmet);
 
 await app.register(cors, {

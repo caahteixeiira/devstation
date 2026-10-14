@@ -1,14 +1,38 @@
 import type { FastifyInstance } from "fastify";
 import {
   createExperienceController,
-  deleteExperienceController,
+  listExperiencesController,
   updateExperienceController,
+  deleteExperienceController,
 } from "./experience.controller.js";
-import { listExperiencesController } from "./experience.controller.js";
+import { requireAdmin } from "../auth/auth.middleware.js";
+
+type CreateRequest = Parameters<typeof createExperienceController>[0];
+type UpdateRequest = Parameters<typeof updateExperienceController>[0];
 
 export async function experiencesRoutes(app: FastifyInstance) {
-  app.post("/experiences", createExperienceController);
   app.get("/experiences", listExperiencesController);
-  app.patch("/experiences/:id", updateExperienceController);
-  app.delete("/experiences/:id", deleteExperienceController);
+
+  app.post<{ Body: CreateRequest["body"] }>(
+    "/experiences",
+    { preHandler: requireAdmin },
+    createExperienceController,
+  );
+
+  app.patch<{
+    Params: UpdateRequest["params"];
+    Body: UpdateRequest["body"];
+  }>(
+    "/experiences/:id",
+    { preHandler: requireAdmin },
+    updateExperienceController,
+  );
+
+  app.delete<{
+    Params: Parameters<typeof deleteExperienceController>[0]["params"];
+  }>(
+    "/experiences/:id",
+    { preHandler: requireAdmin },
+    deleteExperienceController,
+  );
 }

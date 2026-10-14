@@ -6,11 +6,35 @@ import {
   updateArticleController,
   deleteArticleController,
 } from "./article.controller.js";
+import type {
+  CreateArticleBody,
+  UpdateArticleBody,
+  ArticleSlugParams,
+} from "./article.schema.js";
+import { requireAdmin } from "../auth/auth.middleware.js";
 
 export async function articlesRoutes(app: FastifyInstance) {
-  app.post("/articles", createArticleController);
+  app.post<{ Body: CreateArticleBody }>(
+    "/articles",
+    { preHandler: requireAdmin },
+    createArticleController,
+  );
+
   app.get("/articles", listArticlesController);
-  app.get("/articles/:slug", getArticleBySlugController);
-  app.patch("/articles/:slug", updateArticleController);
-  app.delete("/articles/:slug", deleteArticleController);
+
+  app.get<{ Params: ArticleSlugParams }>(
+    "/articles/:slug",
+    getArticleBySlugController,
+  );
+
+  app.patch<{
+    Params: ArticleSlugParams;
+    Body: UpdateArticleBody;
+  }>("/articles/:slug", { preHandler: requireAdmin }, updateArticleController);
+
+  app.delete<{ Params: ArticleSlugParams }>(
+    "/articles/:slug",
+    { preHandler: requireAdmin },
+    deleteArticleController,
+  );
 }
