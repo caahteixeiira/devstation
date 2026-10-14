@@ -1,10 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
-import type {
-  CreateProjectBody,
-  UpdateProjectBody,
-} from "./project.schema.js";
-
-
+import type { CreateProjectBody, UpdateProjectBody } from "./project.schema.js";
 
 export async function findAllProjects() {
   return prisma.project.findMany({
@@ -39,12 +34,12 @@ export async function findProjectBySlug(slug: string) {
     },
     include: {
       technologies: {
-  select: {
-    id: true,
-    name: true,
-    category: true,
-  },
-},
+        select: {
+          id: true,
+          name: true,
+          category: true,
+        },
+      },
       features: {
         orderBy: {
           order: "asc",
@@ -61,16 +56,23 @@ export async function findProjectBySlug(slug: string) {
         },
       },
       decisions: true,
-      articles: true,
+      articles: {
+        where: {
+          status: "PUBLISHED",
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
       experiments: {
         include: {
           technologies: {
-  select: {
-    id: true,
-    name: true,
-    category: true,
-  },
-},
+            select: {
+              id: true,
+              name: true,
+              category: true,
+            },
+          },
         },
       },
     },
@@ -78,15 +80,36 @@ export async function findProjectBySlug(slug: string) {
 }
 
 export async function createProject(data: CreateProjectBody) {
-  const { technologyIds, ...projectData } = data;
+  const {
+    technologyIds,
+    features = [],
+    improvements = [],
+    images = [],
+    ...projectData
+  } = data;
 
   return prisma.project.create({
     data: {
       ...projectData,
-
       technologies: {
-        connect: technologyIds.map((id) => ({
-          id,
+        connect: technologyIds.map((id) => ({ id })),
+      },
+      features: {
+        create: features.map((feature, order) => ({
+          ...feature,
+          order,
+        })),
+      },
+      improvements: {
+        create: improvements.map((description, order) => ({
+          description,
+          order,
+        })),
+      },
+      images: {
+        create: images.map((image, order) => ({
+          ...image,
+          order,
         })),
       },
     },
@@ -145,7 +168,8 @@ export async function updateProjectBySlug(
   slug: string,
   data: UpdateProjectBody,
 ) {
-  const { technologyIds, ...projectData } = data;
+  const { technologyIds, features, improvements, images, ...projectData } =
+    data;
 
   return prisma.project.update({
     where: {
@@ -157,8 +181,36 @@ export async function updateProjectBySlug(
 
       ...(technologyIds !== undefined && {
         technologies: {
-          set: technologyIds.map((id) => ({
-            id,
+          set: technologyIds.map((id) => ({ id })),
+        },
+      }),
+
+      ...(features !== undefined && {
+        features: {
+          deleteMany: {},
+          create: features.map((feature, order) => ({
+            ...feature,
+            order,
+          })),
+        },
+      }),
+
+      ...(improvements !== undefined && {
+        improvements: {
+          deleteMany: {},
+          create: improvements.map((description, order) => ({
+            description,
+            order,
+          })),
+        },
+      }),
+
+      ...(images !== undefined && {
+        images: {
+          deleteMany: {},
+          create: images.map((image, order) => ({
+            ...image,
+            order,
           })),
         },
       }),

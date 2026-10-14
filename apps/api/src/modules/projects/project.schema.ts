@@ -10,9 +10,17 @@ export const projectSlugParamsSchema = z.object({
     ),
 });
 
-export type ProjectSlugParams = z.infer<
-  typeof projectSlugParamsSchema
->;
+export type ProjectSlugParams = z.infer<typeof projectSlugParamsSchema>;
+
+const projectFeatureSchema = z.object({
+  title: z.string().trim().min(2),
+  description: z.string().trim().min(10),
+});
+
+const projectImageSchema = z.object({
+  imageUrl: z.url(),
+  altText: z.string().trim().min(2),
+});
 
 export const createProjectBodySchema = z.object({
   title: z.string().trim().min(3),
@@ -28,20 +36,16 @@ export const createProjectBodySchema = z.object({
   problem: z.string().trim().min(10),
   solution: z.string().trim().min(10),
   architecture: z.string().trim().min(10),
-  status: z.enum([
-    "PLANNED",
-    "IN_DEVELOPMENT",
-    "COMPLETED",
-    "ARCHIVED",
-  ]),
+  status: z.enum(["PLANNED", "IN_DEVELOPMENT", "COMPLETED", "ARCHIVED"]),
   githubUrl: z.url().optional(),
   demoUrl: z.url().optional(),
   technologyIds: z.array(z.number().int().positive()).default([]),
+  features: z.array(projectFeatureSchema).optional(),
+  improvements: z.array(z.string().trim().min(2)).optional(),
+  images: z.array(projectImageSchema).optional(),
 });
 
-export type CreateProjectBody = z.infer<
-  typeof createProjectBodySchema
->;
+export type CreateProjectBody = z.infer<typeof createProjectBodySchema>;
 
 export const updateProjectBodySchema = z
   .object({
@@ -63,20 +67,16 @@ export const updateProjectBodySchema = z
     architecture: z.string().trim().min(10).optional(),
 
     status: z
-      .enum([
-        "PLANNED",
-        "IN_DEVELOPMENT",
-        "COMPLETED",
-        "ARCHIVED",
-      ])
+      .enum(["PLANNED", "IN_DEVELOPMENT", "COMPLETED", "ARCHIVED"])
       .optional(),
 
     githubUrl: z.url().optional(),
     demoUrl: z.url().optional(),
 
-    technologyIds: z
-      .array(z.number().int().positive())
-      .optional(),
+    technologyIds: z.array(z.number().int().positive()).optional(),
+    features: z.array(projectFeatureSchema).optional(),
+    improvements: z.array(z.string().trim().min(2)).optional(),
+    images: z.array(projectImageSchema).optional(),
   })
   .strict()
   .refine(
@@ -84,6 +84,4 @@ export const updateProjectBodySchema = z
     "At least one field must be provided.",
   );
 
-export type UpdateProjectBody = z.infer<
-  typeof updateProjectBodySchema
->;
+export type UpdateProjectBody = z.infer<typeof updateProjectBodySchema>;
