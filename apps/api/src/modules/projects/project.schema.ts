@@ -17,8 +17,18 @@ const projectFeatureSchema = z.object({
   description: z.string().trim().min(10),
 });
 
+const projectImageSourceSchema = z.union([
+  z
+    .string()
+    .regex(
+      /^\/images\/projects\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.(?:png|jpe?g|webp|avif)$/,
+      "Invalid local project image path.",
+    ),
+  z.url({ protocol: /^https?$/ }),
+]);
+
 const projectImageSchema = z.object({
-  imageUrl: z.url(),
+  imageUrl: projectImageSourceSchema,
   altText: z.string().trim().min(2),
 });
 
