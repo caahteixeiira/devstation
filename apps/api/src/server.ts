@@ -8,6 +8,7 @@ import cors from "@fastify/cors";
 import { experiencesRoutes } from "./modules/experiences/experience.routes.js";
 import { roadmapRoutes } from "./modules/roadmap/roadmap.routes.js";
 import { experimentsRoutes } from "./modules/experiments/experiment.routes.js";
+import { decisionsRoutes } from "./modules/decisions/decision.routes.js";
 
 const app = Fastify({
   logger: true,
@@ -32,6 +33,7 @@ await app.register(articlesRoutes);
 await app.register(experiencesRoutes);
 await app.register(roadmapRoutes);
 await app.register(experimentsRoutes);
+await app.register(decisionsRoutes);
 
 const start = async () => {
   try {
