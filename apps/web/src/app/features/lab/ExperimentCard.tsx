@@ -1,29 +1,28 @@
-import type {
-  Experiment,
-  ExperimentStatus,
-} from "./experiments";
+import Link from "next/link";
+import type { Experiment } from "@/types/experiment";
 
 type ExperimentCardProps = {
   experiment: Experiment;
 };
 
-const statusLabels: Record<ExperimentStatus, string> = {
-  idea: "Ideia",
-  "in-progress": "Em andamento",
-  completed: "Concluído",
+const statusLabels: Record<Experiment["status"], string> = {
+  IDEA: "Ideia",
+  IN_PROGRESS: "Em andamento",
+  COMPLETED: "Concluído",
 };
 
-export function ExperimentCard({
-  experiment,
-}: ExperimentCardProps) {
+export function ExperimentCard({ experiment }: ExperimentCardProps) {
   return (
     <article className="rounded-2xl border border-border bg-surface p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           {experiment.project && (
-            <p className="font-mono text-sm text-primary-strong">
-              {experiment.project}
-            </p>
+            <Link
+              href={`/projetos/${encodeURIComponent(experiment.project.slug)}`}
+              className="font-mono text-sm text-primary-strong hover:underline"
+            >
+              {experiment.project.title}
+            </Link>
           )}
 
           <h2 className="mt-2 text-xl font-semibold text-foreground">
@@ -36,28 +35,31 @@ export function ExperimentCard({
         </span>
       </div>
 
-      <p className="mt-4 leading-7 text-foreground-muted">
+      <p className="mt-4 whitespace-pre-line leading-7 text-foreground-muted">
         {experiment.objective}
       </p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {experiment.technologies.map((technology) => (
-          <span
-            key={technology}
-            className="rounded-lg border border-border px-3 py-1 text-sm text-foreground"
-          >
-            {technology}
-          </span>
-        ))}
-      </div>
+      {experiment.technologies.length > 0 && (
+        <ul
+          aria-label="Tecnologias utilizadas"
+          className="mt-5 flex flex-wrap gap-2"
+        >
+          {experiment.technologies.map((technology) => (
+            <li
+              key={technology.id}
+              className="rounded-lg border border-border px-3 py-1 text-sm text-foreground"
+            >
+              {technology.name}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {experiment.result && (
         <div className="mt-6 border-t border-border pt-5">
-          <p className="text-sm font-medium text-foreground">
-            Resultado
-          </p>
+          <h3 className="text-sm font-medium text-foreground">Resultado</h3>
 
-          <p className="mt-2 leading-7 text-foreground-muted">
+          <p className="mt-2 whitespace-pre-line leading-7 text-foreground-muted">
             {experiment.result}
           </p>
         </div>
