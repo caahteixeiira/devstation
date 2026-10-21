@@ -1,16 +1,14 @@
-import type {
-  RoadmapItem,
-  RoadmapStatus,
-} from "./roadmap";
+import type { RoadmapItem } from "@/types/roadmap";
 
 type RoadmapCardProps = {
   item: RoadmapItem;
 };
 
-const statusLabels: Record<RoadmapStatus, string> = {
-  now: "Agora",
-  next: "Próximo",
-  future: "Futuro",
+const statusLabels: Record<RoadmapItem["status"], string> = {
+  NOW: "Agora",
+  NEXT: "Próximo",
+  FUTURE: "Futuro",
+  COMPLETED: "Concluído",
 };
 
 export function RoadmapCard({ item }: RoadmapCardProps) {
@@ -24,7 +22,7 @@ export function RoadmapCard({ item }: RoadmapCardProps) {
         {item.title}
       </h2>
 
-      <p className="mt-3 leading-7 text-foreground-muted">
+      <p className="mt-3 whitespace-pre-line leading-7 text-foreground-muted">
         {item.description}
       </p>
     </article>
