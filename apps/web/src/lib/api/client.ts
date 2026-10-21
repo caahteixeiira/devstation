@@ -3,6 +3,12 @@ import { getApiBaseUrl } from "@/lib/env";
 
 type ApiErrorKind = "HTTP" | "NETWORK" | "INVALID_RESPONSE";
 
+type ApiRequestOptions = {
+  method: "GET" | "POST";
+  body?: unknown;
+  token?: string;
+};
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -14,21 +20,37 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
+async function apiRequest<T>(
+  path: string,
+  options: ApiRequestOptions,
+): Promise<T> {
   if (!path.startsWith("/") || path.startsWith("//")) {
     throw new Error("API path must start with a single slash.");
   }
 
   const url = `${getApiBaseUrl()}${path}`;
 
+  const headers = new Headers({
+    Accept: "application/json",
+  });
+
+  let body: string | undefined;
+
+  if (options.body !== undefined) {
+    headers.set("Content-Type", "application/json");
+    body = JSON.stringify(options.body);
+  }
+
+  if (options.token) {
+  headers.set("Authorization", `Bearer ${options.token}`);
+}
   let response: Response;
 
   try {
     response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
+      method: options.method,
+      headers,
+      body,
       cache: "no-store",
       signal: AbortSignal.timeout(10_000),
     });
@@ -55,4 +77,24 @@ export async function apiGet<T>(path: string): Promise<T> {
       "INVALID_RESPONSE",
     );
   }
+}
+
+export async function apiGet<T>(
+  path: string,
+  options: { token?: string } = {},
+): Promise<T> {
+  return apiRequest<T>(path, {
+    method: "GET",
+    token: options.token,
+  });
+}
+
+export async function apiPost<T>(
+  path: string,
+  body: unknown,
+): Promise<T> {
+  return apiRequest<T>(path, {
+    method: "POST",
+    body,
+  });
 }
