@@ -1,14 +1,21 @@
 import "server-only";
-import { apiGet, apiPost, ApiError } from "@/lib/api/client";
+import {
+  apiGet,
+  apiPost,
+  apiPatch,
+  apiDelete,
+  ApiError,
+} from "@/lib/api/client";
 import {
   projectsResponseSchema,
   projectDetailResponseSchema,
   createProjectResponseSchema,
-type CreateProjectBody,
+  updateProjectResponseSchema,
+  type UpdateProjectBody,
+  type CreateProjectBody,
   type ProjectSummary,
   type ProjectDetail,
 } from "@/types/project";
-
 
 export async function listProjects(): Promise<ProjectSummary[]> {
   const response = await apiGet<unknown>("/projects");
@@ -60,11 +67,7 @@ export async function createProject(
   data: CreateProjectBody,
   token: string,
 ): Promise<ProjectSummary> {
-  const response = await apiPost<unknown>(
-    "/projects",
-    data,
-    { token },
-  );
+  const response = await apiPost<unknown>("/projects", data, { token });
 
   const parsed = createProjectResponseSchema.safeParse(response);
 
@@ -76,4 +79,34 @@ export async function createProject(
   }
 
   return parsed.data.data;
+}
+
+export async function updateProject(
+  slug: string,
+  data: UpdateProjectBody,
+  token: string,
+): Promise<ProjectSummary> {
+  const response = await apiPatch<unknown>(
+    `/projects/${encodeURIComponent(slug)}`,
+    data,
+    { token },
+  );
+
+  const parsed = updateProjectResponseSchema.safeParse(response);
+
+  if (!parsed.success) {
+    throw new ApiError(
+      "API returned an invalid project update response.",
+      "INVALID_RESPONSE",
+    );
+  }
+
+  return parsed.data.data;
+}
+
+export async function deleteProject(
+  slug: string,
+  token: string,
+): Promise<void> {
+  await apiDelete(`/projects/${encodeURIComponent(slug)}`, { token });
 }

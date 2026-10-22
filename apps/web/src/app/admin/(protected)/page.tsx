@@ -19,13 +19,11 @@ export default async function AdminPage() {
         Administração
       </p>
 
-      <h1 className="mt-4 text-3xl font-semibold">
-        Olá, {user.name}
-      </h1>
+      <h1 className="mt-4 text-3xl font-semibold">Olá, {user.name}</h1>
 
       <p className="mt-4 max-w-2xl leading-7 text-foreground-muted">
-        Esta é a área de gerenciamento do DevStation.
-        Os módulos de edição serão adicionados nas próximas etapas.
+        Esta é a área de gerenciamento do DevStation. Os módulos de edição serão
+        adicionados nas próximas etapas.
       </p>
     </section>
   );
@@ -36,4 +34,4 @@ export default async function AdminPage() {
   className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
 >
   Gerenciar projetos →
-</Link>
+</Link>;

@@ -7,6 +7,7 @@ import { requireAdmin } from "@/lib/auth/require-admin";
 import { getSessionToken } from "@/lib/auth/session";
 import { createProject } from "@/services/projects.service";
 import { createProjectBodySchema } from "@/types/project";
+import { readProjectFormData } from "@/lib/forms/project";
 
 export type CreateProjectActionState = {
   message: string;
@@ -25,62 +26,15 @@ export async function createProjectAction(
     redirect("/admin/login");
   }
 
-  const featureTitles = formData.getAll("featureTitles");
-const featureDescriptions = formData.getAll("featureDescriptions");
+  const form = readProjectFormData(formData);
 
-if (featureTitles.length !== featureDescriptions.length) {
-  return {
-    message: "Confira as funcionalidades informadas.",
-  };
-}
+  if (!form.success) {
+    return {
+      message: form.message,
+    };
+  }
 
-const features = featureTitles.map((title, index) => ({
-  title,
-  description: featureDescriptions[index],
-}));
-
-const improvementsText = formData.get("improvements");
-
-if (typeof improvementsText !== "string") {
-  return {
-    message: "Confira as melhorias informadas.",
-  };
-}
-
-const improvements = improvementsText
-  .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter((line) => line.length > 0);
-
-  const imageUrls = formData.getAll("imageUrls");
-const imageAltTexts = formData.getAll("imageAltTexts");
-
-if (imageUrls.length !== imageAltTexts.length) {
-  return {
-    message: "Confira as imagens informadas.",
-  };
-}
-
-const images = imageUrls.map((imageUrl, index) => ({
-  imageUrl,
-  altText: imageAltTexts[index],
-}));
-
-  const parsed = createProjectBodySchema.safeParse({
-    title: formData.get("title"),
-    slug: formData.get("slug"),
-    summary: formData.get("summary"),
-    problem: formData.get("problem"),
-    solution: formData.get("solution"),
-    architecture: formData.get("architecture"),
-    status: formData.get("status"),
-    githubUrl: formData.get("githubUrl"),
-    demoUrl: formData.get("demoUrl"),
-    features,
-    improvements,
-    images,
-  });
-
+  const parsed = createProjectBodySchema.safeParse(form.data);
   if (!parsed.success) {
     return {
       message: "Confira os campos informados.",

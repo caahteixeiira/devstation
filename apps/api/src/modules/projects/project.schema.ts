@@ -80,8 +80,8 @@ export const updateProjectBodySchema = z
       .enum(["PLANNED", "IN_DEVELOPMENT", "COMPLETED", "ARCHIVED"])
       .optional(),
 
-    githubUrl: z.url().optional(),
-    demoUrl: z.url().optional(),
+    githubUrl: z.url().nullable().optional(),
+    demoUrl: z.url().nullable().optional(),
 
     technologyIds: z.array(z.number().int().positive()).optional(),
     features: z.array(projectFeatureSchema).optional(),

@@ -103,9 +103,7 @@ export type ProjectDetail = z.infer<typeof projectDetailSchema>;
 
 const optionalProjectUrlSchema = z.preprocess(
   (value) =>
-    typeof value === "string" && value.trim() === ""
-      ? undefined
-      : value,
+    typeof value === "string" && value.trim() === "" ? undefined : value,
   z.url().optional(),
 );
 
@@ -126,30 +124,51 @@ export const createProjectBodySchema = z.object({
   status: projectSummarySchema.shape.status,
   githubUrl: optionalProjectUrlSchema,
   demoUrl: optionalProjectUrlSchema,
-  technologyIds: z
-    .array(z.number().int().positive())
-    .default([]),
-  features: z.array(
-    z.object({
-      title: z.string().trim().min(2),
-      description: z.string().trim().min(10),
-    }),
-  ).optional(),
-  improvements: z
-    .array(z.string().trim().min(2))
+  technologyIds: z.array(z.number().int().positive()).default([]),
+  features: z
+    .array(
+      z.object({
+        title: z.string().trim().min(2),
+        description: z.string().trim().min(10),
+      }),
+    )
     .optional(),
-  images: z.array(
-    z.object({
-      imageUrl: projectImageSourceSchema,
-      altText: z.string().trim().min(2),
-    }),
-  ).optional(),
+  improvements: z.array(z.string().trim().min(2)).optional(),
+  images: z
+    .array(
+      z.object({
+        imageUrl: projectImageSourceSchema,
+        altText: z.string().trim().min(2),
+      }),
+    )
+    .optional(),
 });
 
 export const createProjectResponseSchema = z.object({
   data: projectSummarySchema,
 });
 
-export type CreateProjectBody = z.infer<
-  typeof createProjectBodySchema
->;
+export type CreateProjectBody = z.infer<typeof createProjectBodySchema>;
+
+const updateProjectUrlSchema = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? null : value),
+  z.url().nullable().optional(),
+);
+
+export const updateProjectBodySchema = createProjectBodySchema
+  .omit({ technologyIds: true })
+  .partial()
+  .extend({
+    technologyIds: z.array(z.number().int().positive()).optional(),
+    githubUrl: updateProjectUrlSchema,
+    demoUrl: updateProjectUrlSchema,
+  })
+  .refine((data) => Object.values(data).some((value) => value !== undefined), {
+    message: "Informe pelo menos um campo para atualizar.",
+  });
+
+export const updateProjectResponseSchema = z.object({
+  data: projectSummarySchema,
+});
+
+export type UpdateProjectBody = z.infer<typeof updateProjectBodySchema>;

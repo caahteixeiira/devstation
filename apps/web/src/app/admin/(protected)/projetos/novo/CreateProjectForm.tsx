@@ -1,13 +1,26 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import {
-  createProjectAction,
-  type CreateProjectActionState,
-} from "./actions";
+import { createProjectAction, type CreateProjectActionState } from "./actions";
 import type { Technology } from "@/types/technology";
 import { ProjectFeaturesFields } from "./ProjectFeaturesFields";
 import { ProjectImagesFields } from "./ProjectImagesFields";
+import type { ProjectDetail } from "@/types/project";
+
+type ProjectFormValues = typeof initialValues;
+
+type CreateProjectFormProps = {
+  technologies: Technology[];
+};
+type ProjectFormProps = CreateProjectFormProps & {
+  initialProject?: ProjectDetail;
+  action: (
+    previousState: CreateProjectActionState,
+    formData: FormData,
+  ) => Promise<CreateProjectActionState>;
+  submitLabel: string;
+  pendingLabel: string;
+};
 
 const initialState: CreateProjectActionState = {
   message: "",
@@ -42,10 +55,7 @@ function FieldError({
   }
 
   return (
-    <p
-      id={`${name}-error`}
-      className="mt-2 text-sm text-foreground-muted"
-    >
+    <p id={`${name}-error`} className="mt-2 text-sm text-foreground-muted">
       {messages.join(" ")}
     </p>
   );
@@ -64,65 +74,73 @@ const initialValues = {
   improvements: "",
 };
 
-type ProjectFormValues = typeof initialValues;
+export function ProjectForm({
+  technologies,
+  initialProject,
+  action,
+  submitLabel,
+  pendingLabel,
+}: ProjectFormProps) {
+  const [state, formAction, pending] = useActionState(action, initialState);
 
-type CreateProjectFormProps = {
-  technologies: Technology[];
-};
-
-export function CreateProjectForm({ technologies }: CreateProjectFormProps) {
-  const [state, formAction, pending] = useActionState(
-    
-    createProjectAction,
-    initialState,
+  const [values, setValues] = useState<ProjectFormValues>(() =>
+    initialProject
+      ? {
+          title: initialProject.title,
+          slug: initialProject.slug,
+          summary: initialProject.summary,
+          problem: initialProject.problem,
+          solution: initialProject.solution,
+          architecture: initialProject.architecture,
+          status: initialProject.status,
+          githubUrl: initialProject.githubUrl ?? "",
+          demoUrl: initialProject.demoUrl ?? "",
+          improvements: initialProject.improvements
+            .map((item) => item.description)
+            .join("\n"),
+        }
+      : { ...initialValues },
   );
 
-  const [values, setValues] = useState(initialValues);
-
-  const [selectedTechnologyIds, setSelectedTechnologyIds] =
-  useState<number[]>([]);
-
-function toggleTechnology(id: number, checked: boolean) {
-  setSelectedTechnologyIds((current) =>
-    checked
-      ? [...new Set([...current, id])]
-      : current.filter((technologyId) => technologyId !== id),
+  const [selectedTechnologyIds, setSelectedTechnologyIds] = useState<number[]>(
+    () =>
+      initialProject
+        ? initialProject.technologies.map((technology) => technology.id)
+        : [],
   );
-}
 
-function updateField(
-  name: keyof ProjectFormValues,
-  value: string,
-) {
-  setValues((current) => ({
-    ...current,
-    [name]: value,
-  }));
-}
+  function toggleTechnology(id: number, checked: boolean) {
+    setSelectedTechnologyIds((current) =>
+      checked
+        ? [...new Set([...current, id])]
+        : current.filter((technologyId) => technologyId !== id),
+    );
+  }
+
+  function updateField(name: keyof ProjectFormValues, value: string) {
+    setValues((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
 
   function errorProps(name: string) {
     const hasError = Boolean(state.fieldErrors?.[name]?.length);
 
     return {
       "aria-invalid": hasError,
-      "aria-describedby": hasError
-        ? `${name}-error`
-        : undefined,
+      "aria-describedby": hasError ? `${name}-error` : undefined,
     };
   }
 
   return (
-    
-<form action={formAction} className="mt-8">
-  <fieldset disabled={pending} className="space-y-6">
+    <form action={formAction} className="mt-8">
+      <fieldset disabled={pending} className="space-y-6">
         <legend className="sr-only">Dados do projeto</legend>
 
         {textFields.map((field) => (
           <div key={field.name}>
-            <label
-              htmlFor={field.name}
-              className="block text-sm font-medium"
-            >
+            <label htmlFor={field.name} className="block text-sm font-medium">
               {field.label}
             </label>
 
@@ -133,38 +151,28 @@ function updateField(
               required
               minLength={field.minLength}
               pattern={
-                field.name === "slug"
-                  ? "[a-z0-9]+(-[a-z0-9]+)*"
-                  : undefined
+                field.name === "slug" ? "[a-z0-9]+(-[a-z0-9]+)*" : undefined
               }
               className={inputClassName}
               {...errorProps(field.name)}
               value={values[field.name]}
-onChange={(event) =>
-  updateField(field.name, event.target.value)
-}
+              onChange={(event) => updateField(field.name, event.target.value)}
             />
 
             {field.name === "slug" && (
               <p className="mt-2 text-sm text-foreground-muted">
-                Use letras minúsculas, números e hífens.
-                Exemplo: sistema-de-chamados.
+                Use letras minúsculas, números e hífens. Exemplo:
+                sistema-de-chamados.
               </p>
             )}
 
-            <FieldError
-              name={field.name}
-              errors={state.fieldErrors}
-            />
+            <FieldError name={field.name} errors={state.fieldErrors} />
           </div>
         ))}
 
         {contentFields.map((field) => (
           <div key={field.name}>
-            <label
-              htmlFor={field.name}
-              className="block text-sm font-medium"
-            >
+            <label htmlFor={field.name} className="block text-sm font-medium">
               {field.label}
             </label>
 
@@ -177,23 +185,15 @@ onChange={(event) =>
               className={inputClassName}
               {...errorProps(field.name)}
               value={values[field.name]}
-onChange={(event) =>
-  updateField(field.name, event.target.value)
-}
+              onChange={(event) => updateField(field.name, event.target.value)}
             />
 
-            <FieldError
-              name={field.name}
-              errors={state.fieldErrors}
-            />
+            <FieldError name={field.name} errors={state.fieldErrors} />
           </div>
         ))}
 
         <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium"
-          >
+          <label htmlFor="status" className="block text-sm font-medium">
             Status
           </label>
 
@@ -201,16 +201,12 @@ onChange={(event) =>
             id="status"
             name="status"
             value={values.status}
-onChange={(event) =>
-  updateField("status", event.target.value)
-}
+            onChange={(event) => updateField("status", event.target.value)}
             className={inputClassName}
             {...errorProps("status")}
           >
             <option value="PLANNED">Planejado</option>
-            <option value="IN_DEVELOPMENT">
-              Em desenvolvimento
-            </option>
+            <option value="IN_DEVELOPMENT">Em desenvolvimento</option>
             <option value="COMPLETED">Concluído</option>
             <option value="ARCHIVED">Arquivado</option>
           </select>
@@ -218,101 +214,90 @@ onChange={(event) =>
           <FieldError name="status" errors={state.fieldErrors} />
         </div>
         <fieldset>
-  <legend className="text-sm font-medium">
-    Tecnologias — opcional
-  </legend>
+          <legend className="text-sm font-medium">
+            Tecnologias — opcional
+          </legend>
 
-  {technologies.length === 0 ? (
-    <p className="mt-3 text-sm text-foreground-muted">
-      Nenhuma tecnologia cadastrada.
-    </p>
-  ) : (
-    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-      {technologies.map((technology) => (
-        <label
-          key={technology.id}
-          className="flex items-start gap-3 rounded-lg border border-border p-3"
-        >
-          <input
-            type="checkbox"
-            name="technologyIds"
-            value={technology.id}
-            checked={selectedTechnologyIds.includes(technology.id)}
+          {technologies.length === 0 ? (
+            <p className="mt-3 text-sm text-foreground-muted">
+              Nenhuma tecnologia cadastrada.
+            </p>
+          ) : (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {technologies.map((technology) => (
+                <label
+                  key={technology.id}
+                  className="flex items-start gap-3 rounded-lg border border-border p-3"
+                >
+                  <input
+                    type="checkbox"
+                    name="technologyIds"
+                    value={technology.id}
+                    checked={selectedTechnologyIds.includes(technology.id)}
+                    onChange={(event) =>
+                      toggleTechnology(technology.id, event.target.checked)
+                    }
+                    className="mt-1"
+                  />
+
+                  <span>
+                    <span className="block text-sm font-medium">
+                      {technology.name}
+                    </span>
+
+                    <span className="block text-sm text-foreground-muted">
+                      {technology.category}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          <FieldError name="technologyIds" errors={state.fieldErrors} />
+        </fieldset>
+        <ProjectFeaturesFields
+          errors={state.fieldErrors?.features}
+          initialFeatures={initialProject?.features}
+        />
+
+        <div>
+          <label htmlFor="improvements" className="block text-sm font-medium">
+            Melhorias — opcional
+          </label>
+
+          <p
+            id="improvements-help"
+            className="mt-2 text-sm text-foreground-muted"
+          >
+            Escreva uma melhoria por linha.
+          </p>
+
+          <textarea
+            id="improvements"
+            name="improvements"
+            value={values.improvements}
             onChange={(event) =>
-              toggleTechnology(
-                technology.id,
-                event.target.checked,
-              )
+              updateField("improvements", event.target.value)
             }
-            className="mt-1"
+            rows={5}
+            className={inputClassName}
+            aria-invalid={Boolean(state.fieldErrors?.improvements?.length)}
+            aria-describedby={
+              state.fieldErrors?.improvements?.length
+                ? "improvements-help improvements-error"
+                : "improvements-help"
+            }
           />
 
-          <span>
-            <span className="block text-sm font-medium">
-              {technology.name}
-            </span>
-
-            <span className="block text-sm text-foreground-muted">
-              {technology.category}
-            </span>
-          </span>
-        </label>
-      ))}
-    </div>
-  )}
-
-  <FieldError
-    name="technologyIds"
-    errors={state.fieldErrors}
-  />
-</fieldset>
-<ProjectFeaturesFields
-  errors={state.fieldErrors?.features}
-/>
-
-<div>
-  <label
-    htmlFor="improvements"
-    className="block text-sm font-medium"
-  >
-    Melhorias — opcional
-  </label>
-
-  <p
-    id="improvements-help"
-    className="mt-2 text-sm text-foreground-muted"
-  >
-    Escreva uma melhoria por linha.
-  </p>
-
-  <textarea
-    id="improvements"
-    name="improvements"
-    value={values.improvements}
-    onChange={(event) =>
-      updateField("improvements", event.target.value)
-    }
-    rows={5}
-    className={inputClassName}
-    aria-invalid={Boolean(state.fieldErrors?.improvements?.length)}
-    aria-describedby={
-      state.fieldErrors?.improvements?.length
-        ? "improvements-help improvements-error"
-        : "improvements-help"
-    }
-  />
-
-  <FieldError
-    name="improvements"
-    errors={state.fieldErrors}
-  />
-</div>
-    <ProjectImagesFields errors={state.fieldErrors?.images} />
+          <FieldError name="improvements" errors={state.fieldErrors} />
+        </div>
+        <ProjectImagesFields
+          errors={state.fieldErrors?.images}
+          initialImages={initialProject?.images}
+        />
         <div>
-          <label
-            htmlFor="githubUrl"
-            className="block text-sm font-medium"
-          >
+          <label htmlFor="githubUrl" className="block text-sm font-medium">
             URL do GitHub — opcional
           </label>
 
@@ -323,22 +308,14 @@ onChange={(event) =>
             className={inputClassName}
             {...errorProps("githubUrl")}
             value={values.githubUrl}
-onChange={(event) =>
-  updateField("githubUrl", event.target.value)
-}
+            onChange={(event) => updateField("githubUrl", event.target.value)}
           />
 
-          <FieldError
-            name="githubUrl"
-            errors={state.fieldErrors}
-          />
+          <FieldError name="githubUrl" errors={state.fieldErrors} />
         </div>
 
         <div>
-          <label
-            htmlFor="demoUrl"
-            className="block text-sm font-medium"
-          >
+          <label htmlFor="demoUrl" className="block text-sm font-medium">
             URL da demonstração — opcional
           </label>
 
@@ -349,15 +326,10 @@ onChange={(event) =>
             className={inputClassName}
             {...errorProps("demoUrl")}
             value={values.demoUrl}
-onChange={(event) =>
-  updateField("demoUrl", event.target.value)
-}
+            onChange={(event) => updateField("demoUrl", event.target.value)}
           />
 
-          <FieldError
-            name="demoUrl"
-            errors={state.fieldErrors}
-          />
+          <FieldError name="demoUrl" errors={state.fieldErrors} />
         </div>
 
         {state.message && (
@@ -370,9 +342,20 @@ onChange={(event) =>
           type="submit"
           className="rounded-lg bg-primary px-5 py-3 font-medium text-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {pending ? "Cadastrando…" : "Cadastrar projeto"}
+          {pending ? pendingLabel : submitLabel}
         </button>
       </fieldset>
     </form>
+  );
+}
+
+export function CreateProjectForm({ technologies }: CreateProjectFormProps) {
+  return (
+    <ProjectForm
+      technologies={technologies}
+      action={createProjectAction}
+      submitLabel="Cadastrar projeto"
+      pendingLabel="Cadastrando…"
+    />
   );
 }

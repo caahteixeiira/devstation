@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ProjectDetail } from "@/types/project";
 
 type FeatureField = {
   key: string;
@@ -10,6 +11,7 @@ type FeatureField = {
 
 type ProjectFeaturesFieldsProps = {
   errors?: string[];
+  initialFeatures?: ProjectDetail["features"];
 };
 
 const inputClassName =
@@ -17,8 +19,15 @@ const inputClassName =
 
 export function ProjectFeaturesFields({
   errors,
+  initialFeatures = [],
 }: ProjectFeaturesFieldsProps) {
-  const [features, setFeatures] = useState<FeatureField[]>([]);
+  const [features, setFeatures] = useState<FeatureField[]>(() =>
+    initialFeatures.map((feature) => ({
+      key: String(feature.id),
+      title: feature.title,
+      description: feature.description,
+    })),
+  );
 
   function addFeature() {
     setFeatures((current) => [
@@ -38,17 +47,13 @@ export function ProjectFeaturesFields({
   ) {
     setFeatures((current) =>
       current.map((feature) =>
-        feature.key === key
-          ? { ...feature, [field]: value }
-          : feature,
+        feature.key === key ? { ...feature, [field]: value } : feature,
       ),
     );
   }
 
   function removeFeature(key: string) {
-    setFeatures((current) =>
-      current.filter((feature) => feature.key !== key),
-    );
+    setFeatures((current) => current.filter((feature) => feature.key !== key));
   }
 
   return (
@@ -75,11 +80,7 @@ export function ProjectFeaturesFields({
               name="featureTitles"
               value={feature.title}
               onChange={(event) =>
-                updateFeature(
-                  feature.key,
-                  "title",
-                  event.target.value,
-                )
+                updateFeature(feature.key, "title", event.target.value)
               }
               required
               minLength={2}
@@ -98,11 +99,7 @@ export function ProjectFeaturesFields({
               name="featureDescriptions"
               value={feature.description}
               onChange={(event) =>
-                updateFeature(
-                  feature.key,
-                  "description",
-                  event.target.value,
-                )
+                updateFeature(feature.key, "description", event.target.value)
               }
               required
               minLength={10}

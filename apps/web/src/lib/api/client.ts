@@ -4,7 +4,7 @@ import { getApiBaseUrl } from "@/lib/env";
 type ApiErrorKind = "HTTP" | "NETWORK" | "INVALID_RESPONSE";
 
 type ApiRequestOptions = {
-  method: "GET" | "POST";
+  method: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
   token?: string;
 };
@@ -20,10 +20,23 @@ export class ApiError extends Error {
   }
 }
 
+async function apiRequest(
+  path: string,
+  options: ApiRequestOptions,
+  responseType: "empty",
+): Promise<void>;
+
 async function apiRequest<T>(
   path: string,
   options: ApiRequestOptions,
-): Promise<T> {
+  responseType?: "json",
+): Promise<T>;
+
+async function apiRequest<T>(
+  path: string,
+  options: ApiRequestOptions,
+  responseType: "json" | "empty" = "json",
+): Promise<T | void> {
   if (!path.startsWith("/") || path.startsWith("//")) {
     throw new Error("API path must start with a single slash.");
   }
@@ -42,8 +55,8 @@ async function apiRequest<T>(
   }
 
   if (options.token) {
-  headers.set("Authorization", `Bearer ${options.token}`);
-}
+    headers.set("Authorization", `Bearer ${options.token}`);
+  }
   let response: Response;
 
   try {
@@ -67,6 +80,18 @@ async function apiRequest<T>(
       "HTTP",
       response.status,
     );
+  }
+
+  if (responseType === "empty") {
+    if (response.status !== 204) {
+      throw new ApiError(
+        "API returned an unexpected deletion response.",
+        "INVALID_RESPONSE",
+        response.status,
+      );
+    }
+
+    return;
   }
 
   try {
@@ -99,4 +124,30 @@ export async function apiPost<T>(
     body,
     token: options.token,
   });
+}
+
+export async function apiPatch<T>(
+  path: string,
+  body: unknown,
+  options: { token?: string } = {},
+): Promise<T> {
+  return apiRequest<T>(path, {
+    method: "PATCH",
+    body,
+    token: options.token,
+  });
+}
+
+export async function apiDelete(
+  path: string,
+  options: { token?: string } = {},
+): Promise<void> {
+  return apiRequest(
+    path,
+    {
+      method: "DELETE",
+      token: options.token,
+    },
+    "empty",
+  );
 }

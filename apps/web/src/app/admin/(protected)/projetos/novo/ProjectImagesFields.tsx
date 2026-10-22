@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ProjectDetail } from "@/types/project";
 
 type ImageField = {
   key: string;
@@ -10,6 +11,7 @@ type ImageField = {
 
 type ProjectImagesFieldsProps = {
   errors?: string[];
+  initialImages?: ProjectDetail["images"];
 };
 
 const inputClassName =
@@ -17,8 +19,15 @@ const inputClassName =
 
 export function ProjectImagesFields({
   errors,
+  initialImages = [],
 }: ProjectImagesFieldsProps) {
-  const [images, setImages] = useState<ImageField[]>([]);
+  const [images, setImages] = useState<ImageField[]>(() =>
+    initialImages.map((image) => ({
+      key: String(image.id),
+      imageUrl: image.imageUrl,
+      altText: image.altText,
+    })),
+  );
 
   function addImage() {
     setImages((current) => [
@@ -38,36 +47,27 @@ export function ProjectImagesFields({
   ) {
     setImages((current) =>
       current.map((image) =>
-        image.key === key
-          ? { ...image, [field]: value }
-          : image,
+        image.key === key ? { ...image, [field]: value } : image,
       ),
     );
   }
 
   function removeImage(key: string) {
-    setImages((current) =>
-      current.filter((image) => image.key !== key),
-    );
+    setImages((current) => current.filter((image) => image.key !== key));
   }
 
   return (
     <fieldset>
-      <legend className="text-sm font-medium">
-        Imagens — opcional
-      </legend>
+      <legend className="text-sm font-medium">Imagens — opcional</legend>
 
       <p className="mt-2 text-sm text-foreground-muted">
-        Coloque o arquivo em public/images/projects e informe
-        seu caminho, como /images/projects/devstation/home.webp.
+        Coloque o arquivo em public/images/projects e informe seu caminho, como
+        /images/projects/devstation/home.webp.
       </p>
 
       <div className="mt-4 space-y-4">
         {images.map((image, index) => (
-          <div
-            key={image.key}
-            className="rounded-xl border border-border p-4"
-          >
+          <div key={image.key} className="rounded-xl border border-border p-4">
             <label
               htmlFor={`image-url-${image.key}`}
               className="block text-sm font-medium"
@@ -81,11 +81,7 @@ export function ProjectImagesFields({
               type="text"
               value={image.imageUrl}
               onChange={(event) =>
-                updateImage(
-                  image.key,
-                  "imageUrl",
-                  event.target.value,
-                )
+                updateImage(image.key, "imageUrl", event.target.value)
               }
               required
               placeholder="/images/projects/devstation/home.webp"
@@ -105,11 +101,7 @@ export function ProjectImagesFields({
               type="text"
               value={image.altText}
               onChange={(event) =>
-                updateImage(
-                  image.key,
-                  "altText",
-                  event.target.value,
-                )
+                updateImage(image.key, "altText", event.target.value)
               }
               required
               minLength={2}

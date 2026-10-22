@@ -29,14 +29,18 @@ export default async function AdminProjectsPage() {
         ← Voltar à administração
       </Link>
 
-      <h1 className="mt-6 text-3xl font-semibold">
-        Projetos
-      </h1>
+      <h1 className="mt-6 text-3xl font-semibold">Projetos</h1>
 
       <p className="mt-4 text-foreground-muted">
         Projetos cadastrados no DevStation.
       </p>
 
+      <Link
+        href="/admin/projetos/novo"
+        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+      >
+        Novo projeto
+      </Link>
       {projects.length === 0 ? (
         <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
           Nenhum projeto cadastrado.
@@ -63,26 +67,16 @@ export default async function AdminProjectsPage() {
 
             <tbody>
               {projects.map((project) => (
-                <tr
-                  key={project.id}
-                  className="border-t border-border"
-                >
-                  <th
-                    scope="row"
-                    className="px-4 py-4 font-medium"
-                  >
-                    <span className="block">
-                      {project.title}
-                    </span>
+                <tr key={project.id} className="border-t border-border">
+                  <th scope="row" className="px-4 py-4 font-medium">
+                    <span className="block">{project.title}</span>
 
                     <span className="mt-1 block font-normal text-foreground-muted">
                       {project.slug}
                     </span>
                   </th>
 
-                  <td className="px-4 py-4">
-                    {statusLabels[project.status]}
-                  </td>
+                  <td className="px-4 py-4">{statusLabels[project.status]}</td>
 
                   <td className="px-4 py-4 text-foreground-muted">
                     {project.technologies.length > 0
@@ -93,6 +87,13 @@ export default async function AdminProjectsPage() {
                   </td>
 
                   <td className="px-4 py-4">
+                    <Link
+                      href={`/admin/projetos/${encodeURIComponent(project.slug)}/editar`}
+                      className="mr-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Editar
+                    </Link>
+
                     <Link
                       href={`/projetos/${encodeURIComponent(project.slug)}`}
                       aria-label={`Ver projeto ${project.title}`}
@@ -116,4 +117,4 @@ export default async function AdminProjectsPage() {
   className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
 >
   Novo projeto
-</Link>
+</Link>;
