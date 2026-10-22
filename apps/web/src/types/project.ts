@@ -100,3 +100,56 @@ export const projectDetailResponseSchema = z.object({
 });
 
 export type ProjectDetail = z.infer<typeof projectDetailSchema>;
+
+const optionalProjectUrlSchema = z.preprocess(
+  (value) =>
+    typeof value === "string" && value.trim() === ""
+      ? undefined
+      : value,
+  z.url().optional(),
+);
+
+export const createProjectBodySchema = z.object({
+  title: z.string().trim().min(3),
+  slug: z
+    .string()
+    .trim()
+    .min(1)
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Use letras minúsculas, números e hífens.",
+    ),
+  summary: z.string().trim().min(10),
+  problem: z.string().trim().min(10),
+  solution: z.string().trim().min(10),
+  architecture: z.string().trim().min(10),
+  status: projectSummarySchema.shape.status,
+  githubUrl: optionalProjectUrlSchema,
+  demoUrl: optionalProjectUrlSchema,
+  technologyIds: z
+    .array(z.number().int().positive())
+    .default([]),
+  features: z.array(
+    z.object({
+      title: z.string().trim().min(2),
+      description: z.string().trim().min(10),
+    }),
+  ).optional(),
+  improvements: z
+    .array(z.string().trim().min(2))
+    .optional(),
+  images: z.array(
+    z.object({
+      imageUrl: projectImageSourceSchema,
+      altText: z.string().trim().min(2),
+    }),
+  ).optional(),
+});
+
+export const createProjectResponseSchema = z.object({
+  data: projectSummarySchema,
+});
+
+export type CreateProjectBody = z.infer<
+  typeof createProjectBodySchema
+>;

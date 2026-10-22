@@ -92,9 +92,11 @@ export async function apiGet<T>(
 export async function apiPost<T>(
   path: string,
   body: unknown,
+  options: { token?: string } = {},
 ): Promise<T> {
   return apiRequest<T>(path, {
     method: "POST",
     body,
+    token: options.token,
   });
 }

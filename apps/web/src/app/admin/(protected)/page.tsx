@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Administração",
@@ -29,3 +30,10 @@ export default async function AdminPage() {
     </section>
   );
 }
+
+<Link
+  href="/admin/projetos"
+  className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
+>
+  Gerenciar projetos →
+</Link>

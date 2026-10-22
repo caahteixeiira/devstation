@@ -1,11 +1,14 @@
 import "server-only";
-import { apiGet, ApiError } from "@/lib/api/client";
+import { apiGet, apiPost, ApiError } from "@/lib/api/client";
 import {
   projectsResponseSchema,
   projectDetailResponseSchema,
+  createProjectResponseSchema,
+type CreateProjectBody,
   type ProjectSummary,
   type ProjectDetail,
 } from "@/types/project";
+
 
 export async function listProjects(): Promise<ProjectSummary[]> {
   const response = await apiGet<unknown>("/projects");
@@ -46,6 +49,28 @@ export async function getProjectBySlug(
   if (!parsed.success) {
     throw new ApiError(
       "API returned an invalid project detail response.",
+      "INVALID_RESPONSE",
+    );
+  }
+
+  return parsed.data.data;
+}
+
+export async function createProject(
+  data: CreateProjectBody,
+  token: string,
+): Promise<ProjectSummary> {
+  const response = await apiPost<unknown>(
+    "/projects",
+    data,
+    { token },
+  );
+
+  const parsed = createProjectResponseSchema.safeParse(response);
+
+  if (!parsed.success) {
+    throw new ApiError(
+      "API returned an invalid project creation response.",
       "INVALID_RESPONSE",
     );
   }
