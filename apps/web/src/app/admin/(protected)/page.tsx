@@ -35,3 +35,10 @@ export default async function AdminPage() {
 >
   Gerenciar projetos →
 </Link>;
+
+<Link
+  href="/admin/tecnologias"
+  className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
+>
+  Gerenciar tecnologias →
+</Link>

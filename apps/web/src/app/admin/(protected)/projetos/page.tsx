@@ -95,6 +95,14 @@ export default async function AdminProjectsPage() {
                     </Link>
 
                     <Link
+  href={`/admin/projetos/${encodeURIComponent(project.slug)}/excluir`}
+  aria-label={`Excluir projeto ${project.title}`}
+  className="mr-4 inline-block text-primary-strong hover:underline"
+>
+  Excluir
+</Link>
+
+                    <Link
                       href={`/projetos/${encodeURIComponent(project.slug)}`}
                       aria-label={`Ver projeto ${project.title}`}
                       className="text-primary-strong hover:underline"
