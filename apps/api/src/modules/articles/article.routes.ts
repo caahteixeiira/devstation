@@ -5,6 +5,8 @@ import {
   listArticlesController,
   updateArticleController,
   deleteArticleController,
+  listArticlesForAdminController,
+getArticleBySlugForAdminController,
 } from "./article.controller.js";
 import type {
   CreateArticleBody,
@@ -37,4 +39,15 @@ export async function articlesRoutes(app: FastifyInstance) {
     { preHandler: requireAdmin },
     deleteArticleController,
   );
+  app.get(
+  "/admin/articles",
+  { preHandler: requireAdmin },
+  listArticlesForAdminController,
+);
+
+app.get<{ Params: ArticleSlugParams }>(
+  "/admin/articles/:slug",
+  { preHandler: requireAdmin },
+  getArticleBySlugForAdminController,
+);
 }

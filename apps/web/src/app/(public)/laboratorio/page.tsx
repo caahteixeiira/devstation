@@ -1,8 +1,11 @@
+import { connection } from "next/server";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { ExperimentCard } from "@/app/features/lab/ExperimentCard";
 import { listExperiments } from "@/services/experiments.service";
 
 export default async function LaboratorioPage() {
+  await connection();
+
   const experiments = await listExperiments();
 
   return (

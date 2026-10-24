@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { requireAdmin } from "@/lib/auth/require-admin";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
 export const metadata: Metadata = {
   title: "Administração",
@@ -9,6 +9,13 @@ export const metadata: Metadata = {
     follow: false,
   },
 };
+
+const modules = [
+  { href: "/admin/projetos", label: "Gerenciar projetos" },
+  { href: "/admin/tecnologias", label: "Gerenciar tecnologias" },
+  { href: "/admin/experiencias", label: "Gerenciar experiências" },
+  { href: "/admin/artigos", label: "Gerenciar artigos" },
+];
 
 export default async function AdminPage() {
   const user = await requireAdmin();
@@ -19,26 +26,26 @@ export default async function AdminPage() {
         Administração
       </p>
 
-      <h1 className="mt-4 text-3xl font-semibold">Olá, {user.name}</h1>
+      <h1 className="mt-4 text-3xl font-semibold">
+        Olá, {user.name}
+      </h1>
 
       <p className="mt-4 max-w-2xl leading-7 text-foreground-muted">
-        Esta é a área de gerenciamento do DevStation. Os módulos de edição serão
-        adicionados nas próximas etapas.
+        Esta é a área de gerenciamento do DevStation.
+        Selecione um módulo para gerenciar seus conteúdos.
       </p>
+
+      <div className="mt-8 flex flex-wrap gap-4">
+        {modules.map((module) => (
+          <Link
+            key={module.href}
+            href={module.href}
+            className="inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
+          >
+            {module.label} →
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }
-
-<Link
-  href="/admin/projetos"
-  className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
->
-  Gerenciar projetos →
-</Link>;
-
-<Link
-  href="/admin/tecnologias"
-  className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
->
-  Gerenciar tecnologias →
-</Link>

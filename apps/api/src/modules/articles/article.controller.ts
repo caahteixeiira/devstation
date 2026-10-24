@@ -1,6 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { createNewArticle, listArticles, getArticleBySlug, updateExistingArticle, deleteExistingArticle } from "./article.service.js";
+import { createNewArticle, listArticles, getArticleBySlug, updateExistingArticle, deleteExistingArticle, listArticlesForAdmin,
+getArticleBySlugForAdmin, } from "./article.service.js";
 import {
   createArticleBodySchema,
   articleSlugParamsSchema,
@@ -118,4 +119,35 @@ export async function deleteArticleController(
   await deleteExistingArticle(parsed.data.slug);
 
   return reply.status(204).send();
+}
+
+export async function listArticlesForAdminController(
+  _request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  const articles = await listArticlesForAdmin();
+
+  return reply.status(200).send({
+    data: articles,
+  });
+}
+
+export async function getArticleBySlugForAdminController(
+  request: FastifyRequest<{ Params: ArticleSlugParams }>,
+  reply: FastifyReply,
+) {
+  const parsed = articleSlugParamsSchema.safeParse(request.params);
+
+  if (!parsed.success) {
+    return reply.status(400).send({
+      message: "Invalid article slug.",
+      errors: parsed.error.flatten(),
+    });
+  }
+
+  const article = await getArticleBySlugForAdmin(parsed.data.slug);
+
+  return reply.status(200).send({
+    data: article,
+  });
 }

@@ -124,3 +124,57 @@ export async function deleteArticle(slug: string) {
     },
   });
 }
+
+export async function findAllArticlesForAdmin() {
+  return prisma.article.findMany({
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      summary: true,
+      category: true,
+      status: true,
+      publishedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      project: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+        },
+      },
+    },
+    orderBy: [
+      { createdAt: "desc" },
+      { id: "desc" },
+    ],
+  });
+}
+
+export async function findArticleBySlugForAdmin(slug: string) {
+  return prisma.article.findUnique({
+    where: {
+      slug,
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      summary: true,
+      content: true,
+      category: true,
+      status: true,
+      publishedAt: true,
+      createdAt: true,
+      updatedAt: true,
+      project: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+        },
+      },
+    },
+  });
+}

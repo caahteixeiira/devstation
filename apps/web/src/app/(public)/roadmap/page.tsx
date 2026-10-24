@@ -1,8 +1,10 @@
 import { PageIntro } from "@/components/layout/PageIntro";
 import { RoadmapCard } from "@/app/features/roadmap/RoadmapCard";
 import { listRoadmapItems } from "@/services/roadmap.service";
+import { connection } from "next/server";
 
 export default async function RoadmapPage() {
+  await connection();
   const roadmapItems = await listRoadmapItems();
 
   return (

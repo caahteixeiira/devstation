@@ -1,9 +1,14 @@
 import { PageIntro } from "@/components/layout/PageIntro";
 import { ArticleCard } from "@/app/features/articles/ArticleCard";
 import { listArticles } from "@/services/articles.service";
+import { connection } from "next/server";
 
 export default async function ArtigosPage() {
+  await connection();
+
   const articles = await listArticles();
+
+  // O return existente continua aqui.
 
   return (
     <PageIntro

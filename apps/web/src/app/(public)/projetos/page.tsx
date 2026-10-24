@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { listProjects } from "@/services/projects.service";
@@ -11,6 +12,7 @@ const statusLabels: Record<ProjectSummary["status"], string> = {
 };
 
 export default async function ProjetosPage() {
+  await connection();
   const projects = await listProjects();
 
   return (

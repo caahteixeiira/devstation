@@ -51,6 +51,9 @@ export default async function AdminTechnologiesPage() {
                 <th scope="col" className="px-4 py-3">
                   Categoria
                 </th>
+                <th scope="col" className="px-4 py-3">
+  Ação
+</th>
               </tr>
             </thead>
 
@@ -70,7 +73,24 @@ export default async function AdminTechnologiesPage() {
                   <td className="px-4 py-4 text-foreground-muted">
                     {technology.category}
                   </td>
+                  <td className="px-4 py-4">
+  <Link
+    href={`/admin/tecnologias/${technology.id}/editar`}
+    aria-label={`Editar tecnologia ${technology.name}`}
+    className="text-primary-strong hover:underline"
+  >
+    Editar
+  </Link>
+  <Link
+  href={`/admin/tecnologias/${technology.id}/excluir`}
+  aria-label={`Excluir tecnologia ${technology.name}`}
+  className="ml-4 inline-block text-primary-strong hover:underline"
+>
+  Excluir
+</Link>
+</td>
                 </tr>
+                
               ))}
             </tbody>
           </table>

@@ -6,9 +6,22 @@ import {
   type CreateTechnologyActionState,
 } from "./actions";
 
+import type { Technology } from "@/types/technology";
+
+type TechnologyFormProps = {
+  initialTechnology?: Technology;
+  action: (
+    previousState: CreateTechnologyActionState,
+    formData: FormData,
+  ) => Promise<CreateTechnologyActionState>;
+  submitLabel: string;
+  pendingLabel: string;
+};
+
 const initialState: CreateTechnologyActionState = {
   message: "",
 };
+
 
 const fields = [
   { name: "name", label: "Nome", placeholder: "Ex.: PostgreSQL" },
@@ -19,16 +32,21 @@ const fields = [
   },
 ] as const;
 
-export function CreateTechnologyForm() {
+export function TechnologyForm({
+  initialTechnology,
+  action,
+  submitLabel,
+  pendingLabel,
+}: TechnologyFormProps) {
   const [state, formAction, pending] = useActionState(
-    createTechnologyAction,
+    action,
     initialState,
   );
 
-  const [values, setValues] = useState({
-    name: "",
-    category: "",
-  });
+  const [values, setValues] = useState(() => ({
+    name: initialTechnology?.name ?? "",
+    category: initialTechnology?.category ?? "",
+  }));
 
   return (
     <form action={formAction} className="mt-8">
@@ -94,9 +112,18 @@ export function CreateTechnologyForm() {
           type="submit"
           className="rounded-lg bg-primary px-5 py-3 font-medium text-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {pending ? "Cadastrando…" : "Cadastrar tecnologia"}
+          {pending ? pendingLabel : submitLabel}
         </button>
       </fieldset>
     </form>
+  );
+}
+export function CreateTechnologyForm() {
+  return (
+    <TechnologyForm
+      action={createTechnologyAction}
+      submitLabel="Cadastrar tecnologia"
+      pendingLabel="Cadastrando…"
+    />
   );
 }

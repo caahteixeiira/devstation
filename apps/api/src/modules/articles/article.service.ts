@@ -9,6 +9,8 @@ import {
   findArticleBySlug,
   updateArticle,
   deleteArticle,
+  findAllArticlesForAdmin,
+findArticleBySlugForAdmin,
 } from "./article.repository.js";
 
 import type { CreateArticleBody, UpdateArticleBody } from "./article.schema.js";
@@ -102,4 +104,18 @@ export async function deleteExistingArticle(slug: string) {
   }
 
   return deleteArticle(slug);
+}
+
+export async function listArticlesForAdmin() {
+  return findAllArticlesForAdmin();
+}
+
+export async function getArticleBySlugForAdmin(slug: string) {
+  const article = await findArticleBySlugForAdmin(slug);
+
+  if (!article) {
+    throw new AppError("Article not found.", 404);
+  }
+
+  return article;
 }

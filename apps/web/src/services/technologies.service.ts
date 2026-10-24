@@ -3,6 +3,7 @@ import {
   apiGet,
   apiPost,
   apiPatch,
+  apiDelete,
   ApiError,
 } from "@/lib/api/client";
 import {
@@ -12,6 +13,10 @@ import {
   type CreateTechnologyBody,
   type UpdateTechnologyBody,
 } from "@/types/technology";
+
+
+
+
 
 export async function listTechnologies(): Promise<Technology[]> {
   const response = await apiGet<unknown>("/technologies");
@@ -72,4 +77,11 @@ export async function updateTechnology(
   }
 
   return parsed.data.data;
+}
+
+export async function deleteTechnology(
+  id: number,
+  token: string,
+): Promise<void> {
+  await apiDelete(`/technologies/${id}`, { token });
 }
