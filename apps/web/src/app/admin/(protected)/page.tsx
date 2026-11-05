@@ -15,6 +15,8 @@ const modules = [
   { href: "/admin/tecnologias", label: "Gerenciar tecnologias" },
   { href: "/admin/experiencias", label: "Gerenciar experiências" },
   { href: "/admin/artigos", label: "Gerenciar artigos" },
+  {href: "/admin/experimentos",label: "Gerenciar experimentos",},
+  {href: "/admin/roadmap",label: "Gerenciar planejamento",},
 ];
 
 export default async function AdminPage() {

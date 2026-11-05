@@ -30,3 +30,46 @@ export const experimentsResponseSchema = z.object({
 });
 
 export type Experiment = z.infer<typeof experimentSchema>;
+
+export const createExperimentBodySchema = z
+  .object({
+    projectId: z.number().int().positive().nullable().optional(),
+    title: z.string().trim().min(2),
+    objective: z.string().trim().min(10),
+    result: z.string().trim().min(10).nullable().optional(),
+    status: z.enum(["IDEA", "IN_PROGRESS", "COMPLETED"]),
+    technologyIds: z.array(z.number().int().positive()).optional(),
+  })
+  .superRefine((data, context) => {
+    if (data.status === "COMPLETED" && !data.result?.trim()) {
+      context.addIssue({
+        code: "custom",
+        path: ["result"],
+        message: "Informe o resultado para concluir o experimento.",
+      });
+    }
+  });
+
+export const experimentResponseSchema = z.object({
+  data: experimentSchema,
+});
+
+export type CreateExperimentBody = z.infer<
+  typeof createExperimentBodySchema
+>;
+
+export const updateExperimentBodySchema = z
+  .object({
+    ...createExperimentBodySchema.shape,
+  })
+  .partial()
+  .refine(
+    (data) => Object.values(data).some((value) => value !== undefined),
+    {
+      message: "Informe pelo menos um campo para atualizar.",
+    },
+  );
+
+export type UpdateExperimentBody = z.infer<
+  typeof updateExperimentBodySchema
+>;
