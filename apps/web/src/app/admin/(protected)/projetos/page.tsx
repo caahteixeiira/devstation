@@ -95,12 +95,20 @@ export default async function AdminProjectsPage() {
                     </Link>
 
                     <Link
-  href={`/admin/projetos/${encodeURIComponent(project.slug)}/excluir`}
-  aria-label={`Excluir projeto ${project.title}`}
-  className="mr-4 inline-block text-primary-strong hover:underline"
->
-  Excluir
-</Link>
+                      href={`/admin/projetos/${encodeURIComponent(project.slug)}/excluir`}
+                      aria-label={`Excluir projeto ${project.title}`}
+                      className="mr-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Excluir
+                    </Link>
+
+                    <Link
+                      href={`/admin/projetos/${encodeURIComponent(project.slug)}/decisoes`}
+                      aria-label={`Ver decisões técnicas de ${project.title}`}
+                      className="ml-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Decisões técnicas
+                    </Link>
 
                     <Link
                       href={`/projetos/${encodeURIComponent(project.slug)}`}
