@@ -49,7 +49,7 @@ export default async function ProjectDecisionsPage({
 
       <Link
         href={`/admin/projetos/${encodeURIComponent(project.slug)}/decisoes/novo`}
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground hover:bg-primary-strong"
+        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary-strong"
       >
         Nova decisão técnica
       </Link>

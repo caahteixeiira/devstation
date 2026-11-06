@@ -37,7 +37,7 @@ const listFields = [
 ] as const;
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 export function ExperienceForm({
   technologies,
@@ -337,7 +337,7 @@ export function ExperienceForm({
 
         <button
           type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? pendingLabel : submitLabel}
         </button>

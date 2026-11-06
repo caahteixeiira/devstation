@@ -15,7 +15,7 @@ type ProjectFeaturesFieldsProps = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground";
+  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground";
 
 export function ProjectFeaturesFields({
   errors,

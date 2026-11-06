@@ -1,5 +1,7 @@
 "use client";
 
+import { useRetry } from "@/components/ui/use-retry";
+
 type AdminProjectsErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
@@ -8,6 +10,8 @@ type AdminProjectsErrorProps = {
 export default function AdminProjectsError({
   reset,
 }: AdminProjectsErrorProps) {
+  const retry = useRetry(reset);
+
   return (
     <section>
       <h1 className="text-3xl font-semibold">
@@ -20,8 +24,8 @@ export default function AdminProjectsError({
 
       <button
         type="button"
-        onClick={() => reset()}
-        className="mt-6 rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+        onClick={retry}
+        className="mt-6 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Tentar novamente
       </button>

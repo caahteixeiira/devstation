@@ -37,7 +37,7 @@ export default async function AdminProjectsPage() {
 
       <Link
         href="/admin/projetos/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Novo projeto
       </Link>
@@ -130,7 +130,7 @@ export default async function AdminProjectsPage() {
 
 <Link
   href="/admin/projetos/novo"
-  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
 >
   Novo projeto
 </Link>;

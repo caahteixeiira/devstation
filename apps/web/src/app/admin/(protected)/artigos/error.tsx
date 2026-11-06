@@ -1,5 +1,7 @@
 "use client";
 
+import { useRetry } from "@/components/ui/use-retry";
+
 import Link from "next/link";
 
 type AdminArticlesErrorProps = {
@@ -10,6 +12,8 @@ type AdminArticlesErrorProps = {
 export default function AdminArticlesError({
   reset,
 }: AdminArticlesErrorProps) {
+  const retry = useRetry(reset);
+
   return (
     <section>
       <h1 className="text-3xl font-semibold">
@@ -24,8 +28,8 @@ export default function AdminArticlesError({
       <div className="mt-6 flex flex-wrap gap-4">
         <button
           type="button"
-          onClick={() => reset()}
-          className="rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+          onClick={retry}
+          className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
         >
           Tentar novamente
         </button>

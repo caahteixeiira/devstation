@@ -1,69 +1,127 @@
 import Link from "next/link";
+import { Card } from "@/components/ui/Card";
+import { FolderIcon } from "@/components/ui/icons";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { TechList } from "@/components/ui/TechList";
+import { cx } from "@/lib/cx";
+import { formatDate } from "@/lib/dates";
 import type { Experiment } from "@/types/experiment";
 
 type ExperimentCardProps = {
   experiment: Experiment;
 };
 
-const statusLabels: Record<Experiment["status"], string> = {
-  IDEA: "Ideia",
-  IN_PROGRESS: "Em andamento",
-  COMPLETED: "Concluído",
-};
+const labelStyles =
+  "font-mono text-[11px] uppercase tracking-[0.18em] text-accent-strong";
+
+/**
+ * Resultado conforme o status: ideia sem resultado não mostra nada;
+ * em andamento indica que ainda não foi registrado; concluído sem
+ * resultado recebe nota neutra. Com resultado, mostra sempre.
+ */
+function ExperimentResult({ experiment }: { experiment: Experiment }) {
+  if (experiment.result) {
+    return (
+      <div className="mt-4 rounded-control border border-accent/30 bg-accent/10 px-4 py-3">
+        <p className={labelStyles}>Resultado</p>
+
+        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-foreground-muted">
+          {experiment.result}
+        </p>
+      </div>
+    );
+  }
+
+  if (experiment.status === "IN_PROGRESS") {
+    return (
+      <p className="mt-4 font-mono text-xs text-foreground-subtle">
+        Resultado ainda não registrado
+      </p>
+    );
+  }
+
+  if (experiment.status === "COMPLETED") {
+    return (
+      <p className="mt-4 font-mono text-xs text-foreground-subtle">
+        Sem resultado registrado
+      </p>
+    );
+  }
+
+  return null;
+}
 
 export function ExperimentCard({ experiment }: ExperimentCardProps) {
+  const headingId = `experiment-${experiment.id}-title`;
+
   return (
-    <article className="rounded-2xl border border-border bg-surface p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          {experiment.project && (
-            <Link
-              href={`/projetos/${encodeURIComponent(experiment.project.slug)}`}
-              className="font-mono text-sm text-primary-strong hover:underline"
-            >
-              {experiment.project.title}
-            </Link>
-          )}
+    <Card
+      as="article"
+      padding="sm"
+      aria-labelledby={headingId}
+      className={cx(
+        "flex h-full flex-col sm:p-5",
+        experiment.status === "IN_PROGRESS" && "border-accent/40",
+      )}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <StatusBadge kind="experiment" status={experiment.status} />
 
-          <h2 className="mt-2 text-xl font-semibold text-foreground">
-            {experiment.title}
-          </h2>
-        </div>
-
-        <span className="rounded-full bg-surface-muted px-3 py-1 text-sm text-foreground-muted">
-          {statusLabels[experiment.status]}
-        </span>
+        <time
+          dateTime={experiment.createdAt}
+          className="font-mono text-xs text-foreground-subtle"
+        >
+          {formatDate(experiment.createdAt)}
+        </time>
       </div>
 
-      <p className="mt-4 whitespace-pre-line leading-7 text-foreground-muted">
-        {experiment.objective}
-      </p>
+      <h3
+        id={headingId}
+        className="mt-3 text-lg font-semibold tracking-tight text-foreground"
+      >
+        {experiment.title}
+      </h3>
+
+      {experiment.project && (
+        <Link
+          href={`/projetos/${encodeURIComponent(experiment.project.slug)}`}
+          className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-sm font-mono text-xs text-foreground-subtle transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-reduce:transition-none"
+        >
+          <FolderIcon className="size-3.5" />
+          {experiment.project.title}
+        </Link>
+      )}
+
+      <div className="mt-4">
+        <p className={labelStyles}>Objetivo</p>
+
+        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-foreground-muted">
+          {experiment.objective}
+        </p>
+      </div>
+
+      <ExperimentResult experiment={experiment} />
 
       {experiment.technologies.length > 0 && (
-        <ul
-          aria-label="Tecnologias utilizadas"
-          className="mt-5 flex flex-wrap gap-2"
-        >
-          {experiment.technologies.map((technology) => (
-            <li
-              key={technology.id}
-              className="rounded-lg border border-border px-3 py-1 text-sm text-foreground"
-            >
-              {technology.name}
-            </li>
-          ))}
-        </ul>
+        <TechList
+          technologies={experiment.technologies}
+          className="mt-auto pt-4"
+        />
       )}
+    </Card>
+  );
+}
 
-      {experiment.result && (
-        <div className="mt-6 border-t border-border pt-5">
-          <h3 className="text-sm font-medium text-foreground">Resultado</h3>
-
-          <p className="mt-2 whitespace-pre-line leading-7 text-foreground-muted">
-            {experiment.result}
-          </p>
-        </div>
-      )}
-    </article>
+export function ExperimentCardSkeleton() {
+  return (
+    <Card padding="sm" className="space-y-3 sm:p-5" aria-hidden="true">
+      <Skeleton className="h-5 w-28" />
+      <Skeleton className="h-6 w-2/3" />
+      <Skeleton className="h-3 w-24" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-5/6" />
+      <Skeleton className="h-6 w-1/2" />
+    </Card>
   );
 }

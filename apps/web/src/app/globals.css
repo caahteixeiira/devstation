@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/*
+  Design tokens do DevStation.
+
+  Os nomes abaixo são a API pública de estilo da aplicação (ex.: bg-surface,
+  text-foreground-muted, border-border). Nenhum nome existente foi renomeado;
+  o Admin depende deles sem alteração.
+
+  background          fundo geral da aplicação
+  surface             superfícies como Sidebar e cards
+  surface-muted       painéis internos e áreas secundárias
+  foreground          texto principal
+  foreground-muted    texto de apoio
+  foreground-subtle   metadados, datas e rótulos discretos
+  primary             azul suave (ações e destaque)
+  primary-foreground  texto sobre fundo primary
+  accent              lilás discreto (experimentação e detalhes)
+  success / warning   tons de status (concluído, arquivado)
+  border              bordas discretas
+  border-strong       bordas de hover, item ativo e destaque
+  border-input        borda de campos de formulário (contraste mínimo 3:1)
+*/
+
 :root {
   --background: #f8fafc;
   --surface: #ffffff;
@@ -7,39 +29,24 @@
 
   --foreground: #1f2937;
   --foreground-muted: #64748b;
+  --foreground-subtle: #6b7788;
 
-  --primary: #93c5fd;
-  --primary-strong: #60a5fa;
+  --primary: #2563eb;
+  --primary-strong: #1d4ed8;
+  --primary-foreground: #ffffff;
 
   --accent: #c4b5fd;
-  --accent-strong: #a78bfa;
+  --accent-strong: #7c3aed;
+
+  --success: #1f7a4d;
+  --warning: #a16207;
 
   --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-input: #8b95a7;
+
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
-
-/*background
-→ fundo geral da aplicação
-
-surface
-→ superfícies como Sidebar e cards
-
-surface-muted
-→ áreas secundárias
-
-foreground
-→ texto principal
-
-foreground-muted
-→ texto menos importante
-
-primary
-→ azul pastel
-
-accent
-→ lilás pastel
-
-border
-→ bordas discretas*/
 
 @theme inline {
   --color-background: var(--background);
@@ -48,14 +55,26 @@ border
 
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
 
   --color-primary: var(--primary);
   --color-primary-strong: var(--primary-strong);
+  --color-primary-foreground: var(--primary-foreground);
 
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
 
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-input: var(--border-input);
+
+  --radius-card: 1rem;
+  --radius-control: 0.625rem;
+
+  --shadow-card: var(--card-shadow);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -63,20 +82,38 @@ border
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #16181d;
-    --surface: #1e2128;
-    --surface-muted: #272b33;
+    --background: #101217;
+    --surface: #171a21;
+    --surface-muted: #1f232c;
 
     --foreground: #edf1f7;
     --foreground-muted: #aab2c0;
+    --foreground-subtle: #7d8694;
 
     --primary: #8ab8f8;
     --primary-strong: #a5c8fa;
+    --primary-foreground: #0f172a;
 
     --accent: #b8a5ee;
     --accent-strong: #cabcf5;
 
-    --border: #343943;
+    --success: #86d3a3;
+    --warning: #e8c27a;
+
+    --border: #2b303b;
+    --border-strong: #3d4350;
+    --border-input: #626c7d;
+
+    --card-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+      0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* Rolagem suave para âncoras internas, só quando o sistema não pede movimento reduzido. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 

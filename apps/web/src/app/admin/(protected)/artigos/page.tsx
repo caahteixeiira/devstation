@@ -61,7 +61,7 @@ export default async function AdminArticlesPage() {
 
       <Link
   href="/admin/artigos/novo"
-  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-foreground transition hover:bg-primary-strong"
+  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
 >
   Novo artigo
 </Link>
