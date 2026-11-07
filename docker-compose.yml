@@ -5,9 +5,9 @@ services:
     restart: unless-stopped
 
     environment:
-      POSTGRES_USER: devstation
-      POSTGRES_PASSWORD: devstation
-      POSTGRES_DB: devstation
+      POSTGRES_USER: ${POSTGRES_USER:?Defina POSTGRES_USER no .env da raiz}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no .env da raiz}
+      POSTGRES_DB: ${POSTGRES_DB:?Defina POSTGRES_DB no .env da raiz}
 
     ports:
       - "5432:5432"

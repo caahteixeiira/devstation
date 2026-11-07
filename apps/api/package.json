@@ -5,14 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "pnpm run prisma:generate && tsc",
     "start": "node dist/server.js",
+    "prisma:generate": "prisma generate --config prisma7.config.ts",
+    "migrate:deploy": "prisma migrate deploy --config prisma7.config.ts",
+    "migrate:dev": "prisma migrate dev --config prisma7.config.ts",
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.3.1",
     "@fastify/helmet": "^13.1.2",
     "@fastify/jwt": "^10.2.4",
+    "@fastify/rate-limit": "^10.3.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "argon2": "^0.45.1",

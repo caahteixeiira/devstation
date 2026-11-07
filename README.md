@@ -29,3 +29,7 @@ PostgreSQL
 
 Architecture:
 Modular Monolith
+
+## Ambiente e publicação
+
+Consulte [a preparação de ambiente, build e migrations](docs/deployment.md).

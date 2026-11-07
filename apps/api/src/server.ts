@@ -5,6 +5,7 @@ import { technologyRoutes } from "./modules/technologies/technology.routes.js";
 import { articlesRoutes } from "./modules/articles/article.routes.js";
 import helmet from "@fastify/helmet";
 import cors from "@fastify/cors";
+import rateLimit from "@fastify/rate-limit";
 import { experiencesRoutes } from "./modules/experiences/experience.routes.js";
 import { roadmapRoutes } from "./modules/roadmap/roadmap.routes.js";
 import { experimentsRoutes } from "./modules/experiments/experiment.routes.js";
@@ -12,9 +13,13 @@ import { decisionsRoutes } from "./modules/decisions/decision.routes.js";
 import jwt from "@fastify/jwt";
 import { authConfig } from "./config/auth.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
+import { readServerConfig } from "./config/server.js";
+
+const serverConfig = readServerConfig();
 
 const app = Fastify({
   logger: true,
+  trustProxy: serverConfig.trustProxy,
 });
 
 app.decorateRequest("authUser", null);
@@ -30,11 +35,12 @@ await app.register(jwt, {
   },
 });
 
+await app.register(rateLimit, { global: false });
 await app.register(authRoutes);
 await app.register(helmet);
 
 await app.register(cors, {
-  origin: "http://localhost:3000",
+  origin: serverConfig.corsOrigin,
   methods: ["GET", "HEAD", "POST", "PATCH", "DELETE"],
 });
 
@@ -55,7 +61,7 @@ await app.register(decisionsRoutes);
 const start = async () => {
   try {
     await app.listen({
-      port: 3333,
+      port: serverConfig.port,
       host: "0.0.0.0",
     });
   } catch (error) {
@@ -65,6 +71,10 @@ const start = async () => {
 };
 
 app.setErrorHandler((error, _request, reply) => {
+  if (error instanceof Error && "statusCode" in error && error.statusCode === 429) {
+    return reply.status(429).send({ message: "Too many login attempts. Try again later." });
+  }
+
   if (error instanceof AppError) {
     return reply.status(error.statusCode).send({
       message: error.message,

@@ -3,11 +3,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "src/generated/prisma/**"],
+      "env": ["API_BASE_URL", "NODE_ENV"],
+      "passThroughEnv": ["DATABASE_URL"]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": ["API_BASE_URL", "DATABASE_URL", "JWT_SECRET", "PORT", "CORS_ORIGIN", "TRUST_PROXY", "NODE_ENV"]
     },
     "lint": {},
     "test": {}
