@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listTechnologies } from "@/services/technologies.service";
@@ -44,22 +46,9 @@ export default async function EditTechnologyPage({
   const action = updateTechnologyAction.bind(null, technology.id);
 
   return (
-    <section className="max-w-2xl">
-      <Link
-        href="/admin/tecnologias"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às tecnologias
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Editar tecnologia
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        As alterações também aparecerão nos projetos,
-        experiências e experimentos vinculados a esta tecnologia.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/tecnologias" variant="secondary">Voltar</ButtonLink>} title={<>Editar tecnologia</>} description={<>As alterações também aparecerão nos projetos,
+        experiências e experimentos vinculados a esta tecnologia.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Tecnologias", href: "/admin/tecnologias" }, { label: "Editar tecnologia" }]} />
 
       <TechnologyForm
         key={technology.id}

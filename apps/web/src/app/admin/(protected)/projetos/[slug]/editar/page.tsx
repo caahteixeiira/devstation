@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getProjectBySlug } from "@/services/projects.service";
@@ -32,19 +34,8 @@ export default async function EditProjectPage({
   const action = updateProjectAction.bind(null, project.slug);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/projetos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos projetos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">Editar projeto</h1>
-
-      <p className="mt-4 leading-7 text-foreground-muted">
-        Atualize os dados de {project.title}.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/projetos" variant="secondary">Voltar</ButtonLink>} title={<>Editar projeto</>} description={<>Atualize os dados de {project.title}.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Projetos", href: "/admin/projetos" }, { label: "Editar projeto" }]} />
 
       <ProjectForm
         key={project.id}

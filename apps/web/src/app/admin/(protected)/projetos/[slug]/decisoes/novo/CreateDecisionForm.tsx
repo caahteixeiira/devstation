@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import type { CreateDecisionActionState } from "./actions";
@@ -46,51 +48,53 @@ export function DecisionForm({
       <fieldset disabled={pending} className="space-y-6">
         <legend className="sr-only">Dados da decisão técnica</legend>
 
-        {fields.map(({ name, label, minLength }) => {
-          const errors = state.fieldErrors?.[name];
-          const hasError = Boolean(errors?.length);
+        <AdminFormSection id="decision-section-0" title="Registro da decisão técnica">
+          {fields.map(({ name, label, minLength }) => {
+            const errors = state.fieldErrors?.[name];
+            const hasError = Boolean(errors?.length);
 
-          const fieldProps = {
-            id: name,
-            name,
-            required: true,
-            minLength,
-            value: values[name],
-            onChange: (
-              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-            ) => {
-              const value = event.currentTarget.value;
-              setValues((previous) => ({ ...previous, [name]: value }));
-            },
-            "aria-invalid": hasError,
-            "aria-describedby": hasError ? `${name}-error` : undefined,
-            className:
-              "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong",
-          };
+            const fieldProps = {
+              id: name,
+              name,
+              required: true,
+              minLength,
+              value: values[name],
+              onChange: (
+                event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+              ) => {
+                const value = event.currentTarget.value;
+                setValues((previous) => ({ ...previous, [name]: value }));
+              },
+              "aria-invalid": hasError,
+              "aria-describedby": hasError ? `${name}-error` : undefined,
+              className:
+                "admin-input",
+            };
 
-          return (
-            <div key={name}>
-              <label htmlFor={name} className="block text-sm font-medium">
-                {label}
-              </label>
+            return (
+              <div key={name}>
+                <label htmlFor={name} className="block text-sm font-medium">
+                  {label}
+                </label>
 
-              {name === "title" ? (
-                <input type="text" {...fieldProps} />
-              ) : (
-                <textarea rows={5} {...fieldProps} />
-              )}
+                {name === "title" ? (
+                  <input type="text" {...fieldProps} />
+                ) : (
+                  <textarea rows={5} {...fieldProps} />
+                )}
 
-              {hasError && (
-                <p
-                  id={`${name}-error`}
-                  className="mt-2 text-sm text-foreground-muted"
-                >
-                  {errors?.join(" ")}
-                </p>
-              )}
-            </div>
-          );
-        })}
+                {hasError && (
+                  <p
+                    id={`${name}-error`}
+                    className="mt-2 text-sm text-foreground-muted"
+                  >
+                    {errors?.join(" ")}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -98,12 +102,10 @@ export function DecisionForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

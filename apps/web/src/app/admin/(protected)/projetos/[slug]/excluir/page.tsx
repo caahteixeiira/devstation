@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getProjectBySlug } from "@/services/projects.service";
@@ -29,24 +31,11 @@ export default async function DeleteProjectPage({
   const action = deleteProjectAction.bind(null, project.slug);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/projetos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos projetos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Excluir projeto
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Você está prestes a excluir o projeto{" "}
+    <section className="admin-page max-w-4xl admin-delete-page">
+      <AdminPageHeader actions={<ButtonLink href="/admin/projetos" variant="secondary">Cancelar exclusão</ButtonLink>} title={<>Excluir projeto</>} description={<>Você está prestes a excluir o projeto{" "}
         <strong className="text-foreground">
           {project.title}
-        </strong>.
-      </p>
+        </strong>.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Projetos", href: "/admin/projetos" }, { label: "Excluir projeto" }]} />
 
       <div className="mt-6 rounded-xl border border-border bg-surface p-6">
         <h2 className="text-lg font-semibold">

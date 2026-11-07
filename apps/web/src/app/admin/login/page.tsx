@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-16">
+    <main className="admin-login">
       <section
         aria-labelledby="login-title"
-        className="w-full max-w-md rounded-2xl border border-border bg-surface p-8"
+        className="admin-login-card"
       >
         <p className="font-mono text-sm uppercase tracking-widest text-primary-strong">
           DevStation

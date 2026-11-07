@@ -1,3 +1,6 @@
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
@@ -13,36 +16,18 @@ export default async function AdminTechnologiesPage() {
   const technologies = await listTechnologies();
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Tecnologias
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Tecnologias cadastradas no DevStation.
-      </p>
-
-      <Link
+    <section className="admin-page">
+      <AdminPageHeader title={<>Tecnologias</>} description={<>Tecnologias cadastradas no DevStation.</>} actions={<ButtonLink
         href="/admin/tecnologias/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Nova tecnologia
-      </Link>
+      </ButtonLink>} />
 
       {technologies.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhuma tecnologia cadastrada.
-        </p>
+        <EmptyState title="Nenhuma tecnologia cadastrada." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Tecnologias — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -52,8 +37,8 @@ export default async function AdminTechnologiesPage() {
                   Categoria
                 </th>
                 <th scope="col" className="px-4 py-3">
-  Ação
-</th>
+                  Ação
+                </th>
               </tr>
             </thead>
 
@@ -74,23 +59,23 @@ export default async function AdminTechnologiesPage() {
                     {technology.category}
                   </td>
                   <td className="px-4 py-4">
-  <Link
-    href={`/admin/tecnologias/${technology.id}/editar`}
-    aria-label={`Editar tecnologia ${technology.name}`}
-    className="text-primary-strong hover:underline"
-  >
-    Editar
-  </Link>
-  <Link
-  href={`/admin/tecnologias/${technology.id}/excluir`}
-  aria-label={`Excluir tecnologia ${technology.name}`}
-  className="ml-4 inline-block text-primary-strong hover:underline"
->
-  Excluir
-</Link>
-</td>
+                    <Link
+                      href={`/admin/tecnologias/${technology.id}/editar`}
+                      aria-label={`Editar tecnologia ${technology.name}`}
+                      className="text-primary-strong hover:underline"
+                    >
+                      Editar
+                    </Link>
+                    <Link
+                      href={`/admin/tecnologias/${technology.id}/excluir`}
+                      aria-label={`Excluir tecnologia ${technology.name}`}
+                      className="ml-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Excluir
+                    </Link>
+                  </td>
                 </tr>
-                
+
               ))}
             </tbody>
           </table>

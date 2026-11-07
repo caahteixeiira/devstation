@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import type { Technology } from "@/types/technology";
@@ -37,7 +39,7 @@ const listFields = [
 ] as const;
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "admin-input";
 
 export function ExperienceForm({
   technologies,
@@ -54,18 +56,18 @@ export function ExperienceForm({
   const [values, setValues] = useState(() =>
     initialExperience
       ? {
-          company: initialExperience.company,
-          role: initialExperience.role,
-          description: initialExperience.description,
-          startDate: initialExperience.startDate.slice(0, 10),
-          endDate: initialExperience.endDate?.slice(0, 10) ?? "",
-          responsibilities: initialExperience.responsibilities
-            .map((item) => item.description)
-            .join("\n"),
-          achievements: initialExperience.achievements
-            .map((item) => item.description)
-            .join("\n"),
-        }
+        company: initialExperience.company,
+        role: initialExperience.role,
+        description: initialExperience.description,
+        startDate: initialExperience.startDate.slice(0, 10),
+        endDate: initialExperience.endDate?.slice(0, 10) ?? "",
+        responsibilities: initialExperience.responsibilities
+          .map((item) => item.description)
+          .join("\n"),
+        achievements: initialExperience.achievements
+          .map((item) => item.description)
+          .join("\n"),
+      }
       : { ...initialValues },
   );
 
@@ -131,203 +133,204 @@ export function ExperienceForm({
           Dados da experiência profissional
         </legend>
 
-        {textFields.map((field) => (
-          <div key={field.name}>
-            <label
-              htmlFor={field.name}
-              className="block text-sm font-medium"
-            >
-              {field.label}
-            </label>
+        <AdminFormSection id="experience-section-0" title="Identificação profissional">
+          {textFields.map((field) => (
+            <div key={field.name}>
+              <label
+                htmlFor={field.name}
+                className="block text-sm font-medium"
+              >
+                {field.label}
+              </label>
 
-            <input
-              id={field.name}
-              name={field.name}
-              type="text"
-              required
-              minLength={2}
-              value={values[field.name]}
-              onChange={(event) =>
-                updateField(field.name, event.target.value)
-              }
-              className={inputClassName}
-              {...errorProps(field.name)}
-            />
+              <input
+                id={field.name}
+                name={field.name}
+                type="text"
+                required
+                minLength={2}
+                value={values[field.name]}
+                onChange={(event) =>
+                  updateField(field.name, event.target.value)
+                }
+                className={inputClassName}
+                {...errorProps(field.name)}
+              />
 
-            {fieldError(field.name)}
-          </div>
-        ))}
-
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium"
-          >
-            Descrição
-          </label>
-
-          <textarea
-            id="description"
-            name="description"
-            required
-            minLength={10}
-            rows={5}
-            value={values.description}
-            onChange={(event) =>
-              updateField("description", event.target.value)
-            }
-            className={inputClassName}
-            {...errorProps("description")}
-          />
-
-          {fieldError("description")}
-        </div>
-
-        <div>
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              name="current"
-              checked={current}
-              onChange={(event) => setCurrent(event.target.checked)}
-              {...errorProps("current")}
-            />
-
-            <span>Trabalho atualmente aqui</span>
-          </label>
-
-          {fieldError("current")}
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2">
+              {fieldError(field.name)}
+            </div>
+          ))}
           <div>
             <label
-              htmlFor="startDate"
+              htmlFor="description"
               className="block text-sm font-medium"
             >
-              Data de início
+              Descrição
             </label>
-
-            <input
-              id="startDate"
-              name="startDate"
-              type="date"
-              required
-              value={values.startDate}
-              onChange={(event) =>
-                updateField("startDate", event.target.value)
-              }
-              className={inputClassName}
-              {...errorProps("startDate")}
-            />
-
-            {fieldError("startDate")}
-          </div>
-
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium"
-            >
-              Data de término
-            </label>
-
-            <input
-              id="endDate"
-              name="endDate"
-              type="date"
-              disabled={current}
-              required={!current}
-              min={values.startDate || undefined}
-              value={current ? "" : values.endDate}
-              onChange={(event) =>
-                updateField("endDate", event.target.value)
-              }
-              className={inputClassName}
-              {...errorProps("endDate")}
-            />
-
-            {fieldError("endDate")}
-          </div>
-        </div>
-
-        {listFields.map((field) => (
-          <div key={field.name}>
-            <label
-              htmlFor={field.name}
-              className="block text-sm font-medium"
-            >
-              {field.label} — opcional
-            </label>
-
-            <p className="mt-2 text-sm text-foreground-muted">
-              Escreva um item por linha, com pelo menos dois caracteres.
-            </p>
 
             <textarea
-              id={field.name}
-              name={field.name}
+              id="description"
+              name="description"
+              required
+              minLength={10}
               rows={5}
-              value={values[field.name]}
+              value={values.description}
               onChange={(event) =>
-                updateField(field.name, event.target.value)
+                updateField("description", event.target.value)
               }
               className={inputClassName}
-              {...errorProps(field.name)}
+              {...errorProps("description")}
             />
 
-            {fieldError(field.name)}
+            {fieldError("description")}
           </div>
-        ))}
+        </AdminFormSection>
+        <AdminFormSection id="experience-section-1" title="Período">
+          <div>
+            <label className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                name="current"
+                checked={current}
+                onChange={(event) => setCurrent(event.target.checked)}
+                {...errorProps("current")}
+              />
 
-        <fieldset>
-          <legend className="text-sm font-medium">
-            Tecnologias — opcional
-          </legend>
+              <span>Trabalho atualmente aqui</span>
+            </label>
 
-          {technologies.length === 0 ? (
-            <p className="mt-3 text-sm text-foreground-muted">
-              Nenhuma tecnologia cadastrada.
-            </p>
-          ) : (
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {technologies.map((technology) => (
-                <label
-                  key={technology.id}
-                  className="flex items-start gap-3 rounded-lg border border-border p-3"
-                >
-                  <input
-                    type="checkbox"
-                    name="technologyIds"
-                    value={technology.id}
-                    checked={selectedTechnologyIds.includes(
-                      technology.id,
-                    )}
-                    onChange={(event) =>
-                      toggleTechnology(
-                        technology.id,
-                        event.target.checked,
-                      )
-                    }
-                    className="mt-1"
-                  />
+            {fieldError("current")}
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="startDate"
+                className="block text-sm font-medium"
+              >
+                Data de início
+              </label>
 
-                  <span>
-                    <span className="block text-sm font-medium">
-                      {technology.name}
-                    </span>
+              <input
+                id="startDate"
+                name="startDate"
+                type="date"
+                required
+                value={values.startDate}
+                onChange={(event) =>
+                  updateField("startDate", event.target.value)
+                }
+                className={inputClassName}
+                {...errorProps("startDate")}
+              />
 
-                    <span className="block text-sm text-foreground-muted">
-                      {technology.category}
-                    </span>
-                  </span>
-                </label>
-              ))}
+              {fieldError("startDate")}
             </div>
-          )}
 
-          {fieldError("technologyIds")}
-        </fieldset>
+            <div>
+              <label
+                htmlFor="endDate"
+                className="block text-sm font-medium"
+              >
+                Data de término
+              </label>
+
+              <input
+                id="endDate"
+                name="endDate"
+                type="date"
+                disabled={current}
+                required={!current}
+                min={values.startDate || undefined}
+                value={current ? "" : values.endDate}
+                onChange={(event) =>
+                  updateField("endDate", event.target.value)
+                }
+                className={inputClassName}
+                {...errorProps("endDate")}
+              />
+
+              {fieldError("endDate")}
+            </div>
+          </div>
+        </AdminFormSection>
+        <AdminFormSection id="experience-section-2" title="Atuação e tecnologias">
+          {listFields.map((field) => (
+            <div key={field.name}>
+              <label
+                htmlFor={field.name}
+                className="block text-sm font-medium"
+              >
+                {field.label} — opcional
+              </label>
+
+              <p className="mt-2 text-sm text-foreground-muted">
+                Escreva um item por linha, com pelo menos dois caracteres.
+              </p>
+
+              <textarea
+                id={field.name}
+                name={field.name}
+                rows={5}
+                value={values[field.name]}
+                onChange={(event) =>
+                  updateField(field.name, event.target.value)
+                }
+                className={inputClassName}
+                {...errorProps(field.name)}
+              />
+
+              {fieldError(field.name)}
+            </div>
+          ))}
+          <fieldset>
+            <legend className="text-sm font-medium">
+              Tecnologias — opcional
+            </legend>
+
+            {technologies.length === 0 ? (
+              <p className="mt-3 text-sm text-foreground-muted">
+                Nenhuma tecnologia cadastrada.
+              </p>
+            ) : (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {technologies.map((technology) => (
+                  <label
+                    key={technology.id}
+                    className="flex items-start gap-3 rounded-lg border border-border p-3"
+                  >
+                    <input
+                      type="checkbox"
+                      name="technologyIds"
+                      value={technology.id}
+                      checked={selectedTechnologyIds.includes(
+                        technology.id,
+                      )}
+                      onChange={(event) =>
+                        toggleTechnology(
+                          technology.id,
+                          event.target.checked,
+                        )
+                      }
+                      className="mt-1"
+                    />
+
+                    <span>
+                      <span className="block text-sm font-medium">
+                        {technology.name}
+                      </span>
+
+                      <span className="block text-sm text-foreground-muted">
+                        {technology.category}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {fieldError("technologyIds")}
+          </fieldset>
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -335,12 +338,10 @@ export function ExperienceForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

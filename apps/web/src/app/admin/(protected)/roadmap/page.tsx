@@ -1,18 +1,13 @@
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listRoadmapItems } from "@/services/roadmap.service";
-import type { RoadmapItem } from "@/types/roadmap";
-
 export const metadata: Metadata = {
   title: "Gerenciar planejamento",
-};
-
-const statusLabels: Record<RoadmapItem["status"], string> = {
-  NOW: "Agora",
-  NEXT: "Próximo",
-  FUTURE: "Futuro",
-  COMPLETED: "Concluído",
 };
 
 export default async function AdminRoadmapPage() {
@@ -21,36 +16,18 @@ export default async function AdminRoadmapPage() {
   const items = await listRoadmapItems();
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Planejamento
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Etapas planejadas, em andamento e concluídas do DevStation.
-      </p>
-
-      <Link
+    <section className="admin-page">
+      <AdminPageHeader title={<>Planejamento</>} description={<>Etapas planejadas, em andamento e concluídas do DevStation.</>} actions={<ButtonLink
         href="/admin/roadmap/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Novo item
-      </Link>
+      </ButtonLink>} />
 
       {items.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhum item de planejamento cadastrado.
-        </p>
+        <EmptyState title="Nenhum item de planejamento cadastrado." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Planejamento — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -65,8 +42,8 @@ export default async function AdminRoadmapPage() {
                   Status
                 </th>
                 <th scope="col" className="px-4 py-3">
-  Ação
-</th>
+                  Ação
+                </th>
               </tr>
             </thead>
 
@@ -94,17 +71,17 @@ export default async function AdminRoadmapPage() {
                   </th>
 
                   <td className="px-4 py-4">
-                    {statusLabels[item.status]}
+                    <StatusBadge kind="roadmap" status={item.status} />
                   </td>
                   <td className="px-4 py-4">
-  <Link
-    href={`/admin/roadmap/${item.id}/editar`}
-    aria-label={`Editar item ${item.title}`}
-    className="text-primary-strong hover:underline"
-  >
-    Editar
-  </Link>
-</td>
+                    <Link
+                      href={`/admin/roadmap/${item.id}/editar`}
+                      aria-label={`Editar item ${item.title}`}
+                      className="text-primary-strong hover:underline"
+                    >
+                      Editar
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

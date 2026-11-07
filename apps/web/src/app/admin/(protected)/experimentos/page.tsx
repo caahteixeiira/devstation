@@ -1,18 +1,13 @@
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listExperiments } from "@/services/experiments.service";
-import type { Experiment } from "@/types/experiment";
-
-
 export const metadata: Metadata = {
   title: "Gerenciar experimentos",
-};
-
-const statusLabels: Record<Experiment["status"], string> = {
-  IDEA: "Ideia",
-  IN_PROGRESS: "Em andamento",
-  COMPLETED: "Concluído",
 };
 
 export default async function AdminExperimentsPage() {
@@ -21,36 +16,18 @@ export default async function AdminExperimentsPage() {
   const experiments = await listExperiments();
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Experimentos
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Experimentos cadastrados no Laboratório do DevStation.
-      </p>
-
-      <Link
+    <section className="admin-page">
+      <AdminPageHeader title={<>Experimentos</>} description={<>Experimentos cadastrados no Laboratório do DevStation.</>} actions={<ButtonLink
         href="/admin/experimentos/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Novo experimento
-      </Link>
+      </ButtonLink>} />
 
       {experiments.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhum experimento cadastrado.
-        </p>
+        <EmptyState title="Nenhum experimento cadastrado." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Experimentos — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -66,8 +43,8 @@ export default async function AdminExperimentsPage() {
                   Tecnologias
                 </th>
                 <th scope="col" className="px-4 py-3">
-  Ação
-</th>
+                  Ação
+                </th>
               </tr>
             </thead>
 
@@ -89,33 +66,33 @@ export default async function AdminExperimentsPage() {
                   </td>
 
                   <td className="px-4 py-4">
-                    {statusLabels[experiment.status]}
+                    <StatusBadge kind="experiment" status={experiment.status} />
                   </td>
 
                   <td className="px-4 py-4 text-foreground-muted">
                     {experiment.technologies.length > 0
                       ? experiment.technologies
-                          .map((technology) => technology.name)
-                          .join(", ")
+                        .map((technology) => technology.name)
+                        .join(", ")
                       : "Nenhuma tecnologia vinculada"}
                   </td>
 
                   <td className="px-4 py-4">
-  <Link
-    href={`/admin/experimentos/${experiment.id}/editar`}
-    aria-label={`Editar experimento ${experiment.title}`}
-    className="text-primary-strong hover:underline"
-  >
-    Editar
-  </Link>
-</td>
-<Link
-  href={`/admin/experimentos/${experiment.id}/excluir`}
-  aria-label={`Excluir experimento ${experiment.title}`}
-  className="ml-4 inline-block text-primary-strong hover:underline"
->
-  Excluir
-</Link>
+                    <Link
+                      href={`/admin/experimentos/${experiment.id}/editar`}
+                      aria-label={`Editar experimento ${experiment.title}`}
+                      className="text-primary-strong hover:underline"
+                    >
+                      Editar
+                    </Link>
+                    <Link
+                      href={`/admin/experimentos/${experiment.id}/excluir`}
+                      aria-label={`Excluir experimento ${experiment.title}`}
+                      className="ml-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Excluir
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

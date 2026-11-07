@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound, redirect } from "next/navigation";
 import { ApiError } from "@/lib/api/client";
 import { requireAdmin } from "@/lib/auth/require-admin";
@@ -62,22 +64,9 @@ export default async function EditArticlePage({
   const action = updateArticleAction.bind(null, article.slug);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/artigos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos artigos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Editar artigo
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Atualize o conteúdo, o projeto vinculado e o status
-        de publicação.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/artigos" variant="secondary">Voltar</ButtonLink>} title={<>Editar artigo</>} description={<>Atualize o conteúdo, o projeto vinculado e o status
+        de publicação.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Artigos", href: "/admin/artigos" }, { label: "Editar artigo" }]} />
 
       <ArticleForm
         key={article.id}

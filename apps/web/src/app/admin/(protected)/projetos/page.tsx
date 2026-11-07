@@ -1,18 +1,13 @@
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listProjects } from "@/services/projects.service";
-import type { ProjectSummary } from "@/types/project";
-
 export const metadata: Metadata = {
   title: "Gerenciar projetos",
-};
-
-const statusLabels: Record<ProjectSummary["status"], string> = {
-  PLANNED: "Planejado",
-  IN_DEVELOPMENT: "Em desenvolvimento",
-  COMPLETED: "Concluído",
-  ARCHIVED: "Arquivado",
 };
 
 export default async function AdminProjectsPage() {
@@ -21,33 +16,17 @@ export default async function AdminProjectsPage() {
   const projects = await listProjects();
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">Projetos</h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Projetos cadastrados no DevStation.
-      </p>
-
-      <Link
+    <section className="admin-page">
+      <AdminPageHeader title={<>Projetos</>} description={<>Projetos cadastrados no DevStation.</>} actions={<ButtonLink
         href="/admin/projetos/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Novo projeto
-      </Link>
+      </ButtonLink>} />
       {projects.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhum projeto cadastrado.
-        </p>
+        <EmptyState title="Nenhum projeto cadastrado." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Projetos — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -76,13 +55,13 @@ export default async function AdminProjectsPage() {
                     </span>
                   </th>
 
-                  <td className="px-4 py-4">{statusLabels[project.status]}</td>
+                  <td className="px-4 py-4"><StatusBadge kind="project" status={project.status} /></td>
 
                   <td className="px-4 py-4 text-foreground-muted">
                     {project.technologies.length > 0
                       ? project.technologies
-                          .map((technology) => technology.name)
-                          .join(", ")
+                        .map((technology) => technology.name)
+                        .join(", ")
                       : "Nenhuma tecnologia vinculada"}
                   </td>
 
@@ -127,10 +106,3 @@ export default async function AdminProjectsPage() {
     </section>
   );
 }
-
-<Link
-  href="/admin/projetos/novo"
-  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
->
-  Novo projeto
-</Link>;

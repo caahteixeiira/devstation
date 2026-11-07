@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound, redirect } from "next/navigation";
 import { ApiError } from "@/lib/api/client";
 import { requireAdmin } from "@/lib/auth/require-admin";
@@ -60,24 +62,11 @@ export default async function DeleteArticlePage({
   const action = deleteArticleAction.bind(null, article.slug);
 
   return (
-    <section className="max-w-2xl">
-      <Link
-        href="/admin/artigos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos artigos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Excluir artigo
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Você está prestes a excluir o artigo{" "}
+    <section className="admin-page max-w-4xl admin-delete-page">
+      <AdminPageHeader actions={<ButtonLink href="/admin/artigos" variant="secondary">Cancelar exclusão</ButtonLink>} title={<>Excluir artigo</>} description={<>Você está prestes a excluir o artigo{" "}
         <strong className="text-foreground">
           {article.title}
-        </strong>.
-      </p>
+        </strong>.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Artigos", href: "/admin/artigos" }, { label: "Excluir artigo" }]} />
 
       <div className="mt-6 rounded-xl border border-border bg-surface p-6">
         <h2 className="text-lg font-semibold">

@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import {
@@ -19,10 +21,10 @@ const initialValues = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "admin-input";
 
 
-  type RoadmapFormProps = {
+type RoadmapFormProps = {
   initialItem?: RoadmapItem;
   action: (
     previousState: CreateRoadmapActionState,
@@ -46,11 +48,11 @@ export function RoadmapForm({
   const [values, setValues] = useState(() =>
     initialItem
       ? {
-          title: initialItem.title,
-          description: initialItem.description,
-          status: initialItem.status,
-          order: String(initialItem.order),
-        }
+        title: initialItem.title,
+        description: initialItem.description,
+        status: initialItem.status,
+        order: String(initialItem.order),
+      }
       : { ...initialValues },
   );
 
@@ -97,121 +99,122 @@ export function RoadmapForm({
           Dados do item de planejamento
         </legend>
 
-        <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium"
-          >
-            Título
-          </label>
+        <AdminFormSection id="roadmap-section-0" title="Conteúdo do planejamento">
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium"
+            >
+              Título
+            </label>
 
-          <input
-            id="title"
-            name="title"
-            type="text"
-            required
-            minLength={2}
-            value={values.title}
-            onChange={(event) =>
-              updateField("title", event.target.value)
-            }
-            className={inputClassName}
-            {...errorProps("title")}
-          />
+            <input
+              id="title"
+              name="title"
+              type="text"
+              required
+              minLength={2}
+              value={values.title}
+              onChange={(event) =>
+                updateField("title", event.target.value)
+              }
+              className={inputClassName}
+              {...errorProps("title")}
+            />
 
-          {fieldError("title")}
-        </div>
+            {fieldError("title")}
+          </div>
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium"
+            >
+              Descrição
+            </label>
 
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium"
-          >
-            Descrição
-          </label>
+            <textarea
+              id="description"
+              name="description"
+              required
+              minLength={10}
+              rows={5}
+              value={values.description}
+              onChange={(event) =>
+                updateField("description", event.target.value)
+              }
+              className={inputClassName}
+              {...errorProps("description")}
+            />
 
-          <textarea
-            id="description"
-            name="description"
-            required
-            minLength={10}
-            rows={5}
-            value={values.description}
-            onChange={(event) =>
-              updateField("description", event.target.value)
-            }
-            className={inputClassName}
-            {...errorProps("description")}
-          />
+            {fieldError("description")}
+          </div>
+        </AdminFormSection>
+        <AdminFormSection id="roadmap-section-1" title="Organização">
+          <div>
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium"
+            >
+              Status
+            </label>
 
-          {fieldError("description")}
-        </div>
+            <select
+              id="status"
+              name="status"
+              value={values.status}
+              onChange={(event) =>
+                updateField("status", event.target.value)
+              }
+              className={inputClassName}
+              {...errorProps("status")}
+            >
+              <option value="NOW">Agora</option>
+              <option value="NEXT">Próximo</option>
+              <option value="FUTURE">Futuro</option>
+              <option value="COMPLETED">Concluído</option>
+            </select>
 
-        <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium"
-          >
-            Status
-          </label>
+            {fieldError("status")}
+          </div>
+          <div>
+            <label
+              htmlFor="order"
+              className="block text-sm font-medium"
+            >
+              Ordem
+            </label>
 
-          <select
-            id="status"
-            name="status"
-            value={values.status}
-            onChange={(event) =>
-              updateField("status", event.target.value)
-            }
-            className={inputClassName}
-            {...errorProps("status")}
-          >
-            <option value="NOW">Agora</option>
-            <option value="NEXT">Próximo</option>
-            <option value="FUTURE">Futuro</option>
-            <option value="COMPLETED">Concluído</option>
-          </select>
+            <p
+              id="order-help"
+              className="mt-2 text-sm text-foreground-muted"
+            >
+              Números menores aparecem primeiro. Use um número
+              inteiro a partir de zero.
+            </p>
 
-          {fieldError("status")}
-        </div>
+            <input
+              id="order"
+              name="order"
+              type="number"
+              required
+              min={0}
+              step={1}
+              value={values.order}
+              onChange={(event) =>
+                updateField("order", event.target.value)
+              }
+              className={inputClassName}
+              aria-invalid={Boolean(state.fieldErrors?.order?.length)}
+              aria-describedby={
+                state.fieldErrors?.order?.length
+                  ? "order-help order-error"
+                  : "order-help"
+              }
+            />
 
-        <div>
-          <label
-            htmlFor="order"
-            className="block text-sm font-medium"
-          >
-            Ordem
-          </label>
-
-          <p
-            id="order-help"
-            className="mt-2 text-sm text-foreground-muted"
-          >
-            Números menores aparecem primeiro. Use um número
-            inteiro a partir de zero.
-          </p>
-
-          <input
-            id="order"
-            name="order"
-            type="number"
-            required
-            min={0}
-            step={1}
-            value={values.order}
-            onChange={(event) =>
-              updateField("order", event.target.value)
-            }
-            className={inputClassName}
-            aria-invalid={Boolean(state.fieldErrors?.order?.length)}
-            aria-describedby={
-              state.fieldErrors?.order?.length
-                ? "order-help order-error"
-                : "order-help"
-            }
-          />
-
-          {fieldError("order")}
-        </div>
+            {fieldError("order")}
+          </div>
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -219,12 +222,10 @@ export function RoadmapForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import type { ProjectSummary } from "@/types/project";
@@ -38,7 +40,7 @@ const contentFields = [
 ] as const;
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "admin-input";
 
 export function ArticleForm({
   projects,
@@ -55,18 +57,18 @@ export function ArticleForm({
   const [values, setValues] = useState(() =>
     initialArticle
       ? {
-          projectId: String(initialArticle.project.id),
-          title: initialArticle.title,
-          slug: initialArticle.slug,
-          summary: initialArticle.summary,
-          content: initialArticle.content,
-          category: initialArticle.category,
-          status: initialArticle.status,
-        }
+        projectId: String(initialArticle.project.id),
+        title: initialArticle.title,
+        slug: initialArticle.slug,
+        summary: initialArticle.summary,
+        content: initialArticle.content,
+        category: initialArticle.category,
+        status: initialArticle.status,
+      }
       : { ...initialValues },
   );
 
-  
+
 
   function updateField(
     name: keyof typeof initialValues,
@@ -120,141 +122,143 @@ export function ArticleForm({
           Dados do artigo
         </legend>
 
-        <div>
-          <label
-            htmlFor="projectId"
-            className="block text-sm font-medium"
-          >
-            Projeto
-          </label>
-
-          <select
-            id="projectId"
-            name="projectId"
-            required
-            value={values.projectId}
-            onChange={(event) =>
-              updateField("projectId", event.target.value)
-            }
-            className={inputClassName}
-            {...errorProps("projectId")}
-          >
-            <option value="">Selecione um projeto</option>
-
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.title}
-              </option>
-            ))}
-          </select>
-
-          {fieldError("projectId")}
-        </div>
-
-        {textFields.map((field) => (
-          <div key={field.name}>
+        <AdminFormSection id="article-section-0" title="Identificação e vínculo">
+          <div>
             <label
-              htmlFor={field.name}
+              htmlFor="projectId"
               className="block text-sm font-medium"
             >
-              {field.label}
+              Projeto
             </label>
 
-            <input
-              id={field.name}
-              name={field.name}
-              type="text"
+            <select
+              id="projectId"
+              name="projectId"
               required
-              minLength={2}
-              pattern={
-                field.name === "slug"
-                  ? "[a-z0-9]+(-[a-z0-9]+)*"
-                  : undefined
-              }
-              value={values[field.name]}
+              value={values.projectId}
               onChange={(event) =>
-                updateField(field.name, event.target.value)
+                updateField("projectId", event.target.value)
               }
               className={inputClassName}
-              {...errorProps(field.name)}
-            />
+              {...errorProps("projectId")}
+            >
+              <option value="">Selecione um projeto</option>
 
-            {field.name === "slug" && (
-              <p className="mt-2 text-sm text-foreground-muted">
-                Use letras minúsculas, números e hífens.
-                Exemplo: como-organizei-o-devstation.
-              </p>
-            )}
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.title}
+                </option>
+              ))}
+            </select>
 
-            {fieldError(field.name)}
+            {fieldError("projectId")}
           </div>
-        ))}
+          {textFields.map((field) => (
+            <div key={field.name}>
+              <label
+                htmlFor={field.name}
+                className="block text-sm font-medium"
+              >
+                {field.label}
+              </label>
 
-        {contentFields.map((field) => (
-          <div key={field.name}>
+              <input
+                id={field.name}
+                name={field.name}
+                type="text"
+                required
+                minLength={2}
+                pattern={
+                  field.name === "slug"
+                    ? "[a-z0-9]+(-[a-z0-9]+)*"
+                    : undefined
+                }
+                value={values[field.name]}
+                onChange={(event) =>
+                  updateField(field.name, event.target.value)
+                }
+                className={inputClassName}
+                {...errorProps(field.name)}
+              />
+
+              {field.name === "slug" && (
+                <p className="mt-2 text-sm text-foreground-muted">
+                  Use letras minúsculas, números e hífens.
+                  Exemplo: como-organizei-o-devstation.
+                </p>
+              )}
+
+              {fieldError(field.name)}
+            </div>
+          ))}
+        </AdminFormSection>
+        <AdminFormSection id="article-section-1" title="Conteúdo do artigo">
+          {contentFields.map((field) => (
+            <div key={field.name}>
+              <label
+                htmlFor={field.name}
+                className="block text-sm font-medium"
+              >
+                {field.label}
+              </label>
+
+              {field.name === "content" && (
+                <p className="mt-2 text-sm text-foreground-muted">
+                  Use Markdown: ## para seções, **texto** para
+                  negrito e - para listas. O título principal será
+                  exibido pela página.
+                </p>
+              )}
+
+              <textarea
+                id={field.name}
+                name={field.name}
+                required
+                minLength={2}
+                rows={field.rows}
+                value={values[field.name]}
+                onChange={(event) =>
+                  updateField(field.name, event.target.value)
+                }
+                className={`${inputClassName} ${field.name === "content" ? "font-mono text-sm" : ""
+                  }`}
+                {...errorProps(field.name)}
+              />
+
+              {fieldError(field.name)}
+            </div>
+          ))}
+        </AdminFormSection>
+        <AdminFormSection id="article-section-2" title="Publicação">
+          <div>
             <label
-              htmlFor={field.name}
+              htmlFor="status"
               className="block text-sm font-medium"
             >
-              {field.label}
+              Status
             </label>
 
-            {field.name === "content" && (
-              <p className="mt-2 text-sm text-foreground-muted">
-                Use Markdown: ## para seções, **texto** para
-                negrito e - para listas. O título principal será
-                exibido pela página.
-              </p>
-            )}
-
-            <textarea
-              id={field.name}
-              name={field.name}
-              required
-              minLength={2}
-              rows={field.rows}
-              value={values[field.name]}
+            <select
+              id="status"
+              name="status"
+              value={values.status}
               onChange={(event) =>
-                updateField(field.name, event.target.value)
+                updateField("status", event.target.value)
               }
-              className={`${inputClassName} ${
-                field.name === "content" ? "font-mono text-sm" : ""
-              }`}
-              {...errorProps(field.name)}
-            />
+              className={inputClassName}
+              {...errorProps("status")}
+            >
+              <option value="DRAFT">Rascunho</option>
+              <option value="PUBLISHED">Publicado</option>
 
-            {fieldError(field.name)}
+              {initialArticle && (
+                <option value="ARCHIVED">Arquivado</option>
+              )}
+            </select>
+
+            {fieldError("status")}
           </div>
-        ))}
-
-<div>
-  <label
-    htmlFor="status"
-    className="block text-sm font-medium"
-  >
-    Status
-  </label>
-
-  <select
-    id="status"
-    name="status"
-    value={values.status}
-    onChange={(event) =>
-      updateField("status", event.target.value)
-    }
-    className={inputClassName}
-    {...errorProps("status")}
-  >
-    <option value="DRAFT">Rascunho</option>
-    <option value="PUBLISHED">Publicado</option>
-
-    {initialArticle && (
-      <option value="ARCHIVED">Arquivado</option>
-    )}
-  </select>
-
-  {fieldError("status")}
-</div>
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -262,12 +266,10 @@ export function ArticleForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

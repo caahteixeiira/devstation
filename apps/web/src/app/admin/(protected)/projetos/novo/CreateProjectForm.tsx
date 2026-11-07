@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import { createProjectAction, type CreateProjectActionState } from "./actions";
@@ -39,7 +41,7 @@ const contentFields = [
 ] as const;
 
 const inputClassName =
-  "mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "admin-input";
 
 function FieldError({
   name,
@@ -86,19 +88,19 @@ export function ProjectForm({
   const [values, setValues] = useState<ProjectFormValues>(() =>
     initialProject
       ? {
-          title: initialProject.title,
-          slug: initialProject.slug,
-          summary: initialProject.summary,
-          problem: initialProject.problem,
-          solution: initialProject.solution,
-          architecture: initialProject.architecture,
-          status: initialProject.status,
-          githubUrl: initialProject.githubUrl ?? "",
-          demoUrl: initialProject.demoUrl ?? "",
-          improvements: initialProject.improvements
-            .map((item) => item.description)
-            .join("\n"),
-        }
+        title: initialProject.title,
+        slug: initialProject.slug,
+        summary: initialProject.summary,
+        problem: initialProject.problem,
+        solution: initialProject.solution,
+        architecture: initialProject.architecture,
+        status: initialProject.status,
+        githubUrl: initialProject.githubUrl ?? "",
+        demoUrl: initialProject.demoUrl ?? "",
+        improvements: initialProject.improvements
+          .map((item) => item.description)
+          .join("\n"),
+      }
       : { ...initialValues },
   );
 
@@ -138,199 +140,205 @@ export function ProjectForm({
       <fieldset disabled={pending} className="space-y-6">
         <legend className="sr-only">Dados do projeto</legend>
 
-        {textFields.map((field) => (
-          <div key={field.name}>
-            <label htmlFor={field.name} className="block text-sm font-medium">
-              {field.label}
+        <AdminFormSection id="project-section-0" title="Identificação">
+          {textFields.map((field) => (
+            <div key={field.name}>
+              <label htmlFor={field.name} className="block text-sm font-medium">
+                {field.label}
+              </label>
+
+              <input
+                id={field.name}
+                name={field.name}
+                type="text"
+                required
+                minLength={field.minLength}
+                pattern={
+                  field.name === "slug" ? "[a-z0-9]+(-[a-z0-9]+)*" : undefined
+                }
+                className={inputClassName}
+                {...errorProps(field.name)}
+                value={values[field.name]}
+                onChange={(event) => updateField(field.name, event.target.value)}
+              />
+
+              {field.name === "slug" && (
+                <p className="mt-2 text-sm text-foreground-muted">
+                  Use letras minúsculas, números e hífens. Exemplo:
+                  sistema-de-chamados.
+                </p>
+              )}
+
+              <FieldError name={field.name} errors={state.fieldErrors} />
+            </div>
+          ))}
+        </AdminFormSection>
+        <AdminFormSection id="project-section-1" title="Conteúdo técnico">
+          {contentFields.map((field) => (
+            <div key={field.name}>
+              <label htmlFor={field.name} className="block text-sm font-medium">
+                {field.label}
+              </label>
+
+              <textarea
+                id={field.name}
+                name={field.name}
+                required
+                minLength={10}
+                rows={field.name === "summary" ? 3 : 5}
+                className={inputClassName}
+                {...errorProps(field.name)}
+                value={values[field.name]}
+                onChange={(event) => updateField(field.name, event.target.value)}
+              />
+
+              <FieldError name={field.name} errors={state.fieldErrors} />
+            </div>
+          ))}
+        </AdminFormSection>
+        <AdminFormSection id="project-section-2" title="Status e tecnologias">
+          <div>
+            <label htmlFor="status" className="block text-sm font-medium">
+              Status
+            </label>
+
+            <select
+              id="status"
+              name="status"
+              value={values.status}
+              onChange={(event) => updateField("status", event.target.value)}
+              className={inputClassName}
+              {...errorProps("status")}
+            >
+              <option value="PLANNED">Planejado</option>
+              <option value="IN_DEVELOPMENT">Em desenvolvimento</option>
+              <option value="COMPLETED">Concluído</option>
+              <option value="ARCHIVED">Arquivado</option>
+            </select>
+
+            <FieldError name="status" errors={state.fieldErrors} />
+          </div>
+          <fieldset>
+            <legend className="text-sm font-medium">
+              Tecnologias — opcional
+            </legend>
+
+            {technologies.length === 0 ? (
+              <p className="mt-3 text-sm text-foreground-muted">
+                Nenhuma tecnologia cadastrada.
+              </p>
+            ) : (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {technologies.map((technology) => (
+                  <label
+                    key={technology.id}
+                    className="flex items-start gap-3 rounded-lg border border-border p-3"
+                  >
+                    <input
+                      type="checkbox"
+                      name="technologyIds"
+                      value={technology.id}
+                      checked={selectedTechnologyIds.includes(technology.id)}
+                      onChange={(event) =>
+                        toggleTechnology(technology.id, event.target.checked)
+                      }
+                      className="mt-1"
+                    />
+
+                    <span>
+                      <span className="block text-sm font-medium">
+                        {technology.name}
+                      </span>
+
+                      <span className="block text-sm text-foreground-muted">
+                        {technology.category}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            <FieldError name="technologyIds" errors={state.fieldErrors} />
+          </fieldset>
+        </AdminFormSection>
+        <AdminFormSection id="project-section-3" title="Funcionalidades e melhorias">
+          <ProjectFeaturesFields
+            errors={state.fieldErrors?.features}
+            initialFeatures={initialProject?.features}
+          />
+          <div>
+            <label htmlFor="improvements" className="block text-sm font-medium">
+              Melhorias — opcional
+            </label>
+
+            <p
+              id="improvements-help"
+              className="mt-2 text-sm text-foreground-muted"
+            >
+              Escreva uma melhoria por linha.
+            </p>
+
+            <textarea
+              id="improvements"
+              name="improvements"
+              value={values.improvements}
+              onChange={(event) =>
+                updateField("improvements", event.target.value)
+              }
+              rows={5}
+              className={inputClassName}
+              aria-invalid={Boolean(state.fieldErrors?.improvements?.length)}
+              aria-describedby={
+                state.fieldErrors?.improvements?.length
+                  ? "improvements-help improvements-error"
+                  : "improvements-help"
+              }
+            />
+
+            <FieldError name="improvements" errors={state.fieldErrors} />
+          </div>
+        </AdminFormSection>
+        <AdminFormSection id="project-section-4" title="Imagens e links">
+          <ProjectImagesFields
+            errors={state.fieldErrors?.images}
+            initialImages={initialProject?.images}
+          />
+          <div>
+            <label htmlFor="githubUrl" className="block text-sm font-medium">
+              URL do GitHub — opcional
             </label>
 
             <input
-              id={field.name}
-              name={field.name}
-              type="text"
-              required
-              minLength={field.minLength}
-              pattern={
-                field.name === "slug" ? "[a-z0-9]+(-[a-z0-9]+)*" : undefined
-              }
+              id="githubUrl"
+              name="githubUrl"
+              type="url"
               className={inputClassName}
-              {...errorProps(field.name)}
-              value={values[field.name]}
-              onChange={(event) => updateField(field.name, event.target.value)}
+              {...errorProps("githubUrl")}
+              value={values.githubUrl}
+              onChange={(event) => updateField("githubUrl", event.target.value)}
             />
 
-            {field.name === "slug" && (
-              <p className="mt-2 text-sm text-foreground-muted">
-                Use letras minúsculas, números e hífens. Exemplo:
-                sistema-de-chamados.
-              </p>
-            )}
-
-            <FieldError name={field.name} errors={state.fieldErrors} />
+            <FieldError name="githubUrl" errors={state.fieldErrors} />
           </div>
-        ))}
-
-        {contentFields.map((field) => (
-          <div key={field.name}>
-            <label htmlFor={field.name} className="block text-sm font-medium">
-              {field.label}
+          <div>
+            <label htmlFor="demoUrl" className="block text-sm font-medium">
+              URL da demonstração — opcional
             </label>
 
-            <textarea
-              id={field.name}
-              name={field.name}
-              required
-              minLength={10}
-              rows={field.name === "summary" ? 3 : 5}
+            <input
+              id="demoUrl"
+              name="demoUrl"
+              type="url"
               className={inputClassName}
-              {...errorProps(field.name)}
-              value={values[field.name]}
-              onChange={(event) => updateField(field.name, event.target.value)}
+              {...errorProps("demoUrl")}
+              value={values.demoUrl}
+              onChange={(event) => updateField("demoUrl", event.target.value)}
             />
 
-            <FieldError name={field.name} errors={state.fieldErrors} />
+            <FieldError name="demoUrl" errors={state.fieldErrors} />
           </div>
-        ))}
-
-        <div>
-          <label htmlFor="status" className="block text-sm font-medium">
-            Status
-          </label>
-
-          <select
-            id="status"
-            name="status"
-            value={values.status}
-            onChange={(event) => updateField("status", event.target.value)}
-            className={inputClassName}
-            {...errorProps("status")}
-          >
-            <option value="PLANNED">Planejado</option>
-            <option value="IN_DEVELOPMENT">Em desenvolvimento</option>
-            <option value="COMPLETED">Concluído</option>
-            <option value="ARCHIVED">Arquivado</option>
-          </select>
-
-          <FieldError name="status" errors={state.fieldErrors} />
-        </div>
-        <fieldset>
-          <legend className="text-sm font-medium">
-            Tecnologias — opcional
-          </legend>
-
-          {technologies.length === 0 ? (
-            <p className="mt-3 text-sm text-foreground-muted">
-              Nenhuma tecnologia cadastrada.
-            </p>
-          ) : (
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {technologies.map((technology) => (
-                <label
-                  key={technology.id}
-                  className="flex items-start gap-3 rounded-lg border border-border p-3"
-                >
-                  <input
-                    type="checkbox"
-                    name="technologyIds"
-                    value={technology.id}
-                    checked={selectedTechnologyIds.includes(technology.id)}
-                    onChange={(event) =>
-                      toggleTechnology(technology.id, event.target.checked)
-                    }
-                    className="mt-1"
-                  />
-
-                  <span>
-                    <span className="block text-sm font-medium">
-                      {technology.name}
-                    </span>
-
-                    <span className="block text-sm text-foreground-muted">
-                      {technology.category}
-                    </span>
-                  </span>
-                </label>
-              ))}
-            </div>
-          )}
-
-          <FieldError name="technologyIds" errors={state.fieldErrors} />
-        </fieldset>
-        <ProjectFeaturesFields
-          errors={state.fieldErrors?.features}
-          initialFeatures={initialProject?.features}
-        />
-
-        <div>
-          <label htmlFor="improvements" className="block text-sm font-medium">
-            Melhorias — opcional
-          </label>
-
-          <p
-            id="improvements-help"
-            className="mt-2 text-sm text-foreground-muted"
-          >
-            Escreva uma melhoria por linha.
-          </p>
-
-          <textarea
-            id="improvements"
-            name="improvements"
-            value={values.improvements}
-            onChange={(event) =>
-              updateField("improvements", event.target.value)
-            }
-            rows={5}
-            className={inputClassName}
-            aria-invalid={Boolean(state.fieldErrors?.improvements?.length)}
-            aria-describedby={
-              state.fieldErrors?.improvements?.length
-                ? "improvements-help improvements-error"
-                : "improvements-help"
-            }
-          />
-
-          <FieldError name="improvements" errors={state.fieldErrors} />
-        </div>
-        <ProjectImagesFields
-          errors={state.fieldErrors?.images}
-          initialImages={initialProject?.images}
-        />
-        <div>
-          <label htmlFor="githubUrl" className="block text-sm font-medium">
-            URL do GitHub — opcional
-          </label>
-
-          <input
-            id="githubUrl"
-            name="githubUrl"
-            type="url"
-            className={inputClassName}
-            {...errorProps("githubUrl")}
-            value={values.githubUrl}
-            onChange={(event) => updateField("githubUrl", event.target.value)}
-          />
-
-          <FieldError name="githubUrl" errors={state.fieldErrors} />
-        </div>
-
-        <div>
-          <label htmlFor="demoUrl" className="block text-sm font-medium">
-            URL da demonstração — opcional
-          </label>
-
-          <input
-            id="demoUrl"
-            name="demoUrl"
-            type="url"
-            className={inputClassName}
-            {...errorProps("demoUrl")}
-            value={values.demoUrl}
-            onChange={(event) => updateField("demoUrl", event.target.value)}
-          />
-
-          <FieldError name="demoUrl" errors={state.fieldErrors} />
-        </div>
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -338,12 +346,10 @@ export function ProjectForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

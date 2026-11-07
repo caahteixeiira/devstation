@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/Button";
 
 import { useActionState } from "react";
 import {
@@ -33,7 +34,7 @@ export function LoginForm() {
           autoComplete="username"
           required
           disabled={pending}
-          className="mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:opacity-60"
+          className="admin-input"
         />
       </div>
 
@@ -53,7 +54,7 @@ export function LoginForm() {
           maxLength={128}
           required
           disabled={pending}
-          className="mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:opacity-60"
+          className="admin-input"
         />
       </div>
 
@@ -63,13 +64,12 @@ export function LoginForm() {
         </p>
       )}
 
-      <button
-        type="submit"
+      <div className="admin-form-actions"><Button type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full"
       >
         {pending ? "Entrando…" : "Entrar"}
-      </button>
+      </Button></div>
     </form>
   );
 }

@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/Button";
+import { AdminFormSection } from "@/components/admin/AdminFormSection";
 
 import { useActionState, useState } from "react";
 import {
@@ -55,52 +57,54 @@ export function TechnologyForm({
           Dados da tecnologia
         </legend>
 
-        {fields.map((field) => {
-          const errors = state.fieldErrors?.[field.name];
-          const hasError = Boolean(errors?.length);
+        <AdminFormSection id="technology-section-0" title="Dados da tecnologia">
+          {fields.map((field) => {
+            const errors = state.fieldErrors?.[field.name];
+            const hasError = Boolean(errors?.length);
 
-          return (
-            <div key={field.name}>
-              <label
-                htmlFor={field.name}
-                className="block text-sm font-medium"
-              >
-                {field.label}
-              </label>
-
-              <input
-                id={field.name}
-                name={field.name}
-                type="text"
-                required
-                minLength={2}
-                maxLength={100}
-                placeholder={field.placeholder}
-                value={values[field.name]}
-                onChange={(event) =>
-                  setValues((current) => ({
-                    ...current,
-                    [field.name]: event.target.value,
-                  }))
-                }
-                aria-invalid={hasError}
-                aria-describedby={
-                  hasError ? `${field.name}-error` : undefined
-                }
-                className="mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong"
-              />
-
-              {hasError && (
-                <p
-                  id={`${field.name}-error`}
-                  className="mt-2 text-sm text-foreground-muted"
+            return (
+              <div key={field.name}>
+                <label
+                  htmlFor={field.name}
+                  className="block text-sm font-medium"
                 >
-                  {errors?.join(" ")}
-                </p>
-              )}
-            </div>
-          );
-        })}
+                  {field.label}
+                </label>
+
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  required
+                  minLength={2}
+                  maxLength={100}
+                  placeholder={field.placeholder}
+                  value={values[field.name]}
+                  onChange={(event) =>
+                    setValues((current) => ({
+                      ...current,
+                      [field.name]: event.target.value,
+                    }))
+                  }
+                  aria-invalid={hasError}
+                  aria-describedby={
+                    hasError ? `${field.name}-error` : undefined
+                  }
+                  className="admin-input"
+                />
+
+                {hasError && (
+                  <p
+                    id={`${field.name}-error`}
+                    className="mt-2 text-sm text-foreground-muted"
+                  >
+                    {errors?.join(" ")}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </AdminFormSection>
 
         {state.message && (
           <p role="alert" className="text-sm text-foreground-muted">
@@ -108,12 +112,10 @@ export function TechnologyForm({
           </p>
         )}
 
-        <button
-          type="submit"
-          className="rounded-lg bg-primary px-5 py-3 font-medium text-primary-foreground transition hover:bg-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+        <div className="admin-form-actions"><Button type="submit"
         >
           {pending ? pendingLabel : submitLabel}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

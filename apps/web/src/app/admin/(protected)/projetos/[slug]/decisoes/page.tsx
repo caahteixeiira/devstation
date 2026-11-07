@@ -1,3 +1,6 @@
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,31 +36,15 @@ export default async function ProjectDecisionsPage({
   const decisions = await listProjectDecisions(project.id);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/projetos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos projetos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">Decisões técnicas</h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Projeto: <strong className="text-foreground">{project.title}</strong>
-      </p>
-
-      <Link
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader title={<>Decisões técnicas</>} description={<>Projeto: <strong className="text-foreground">{project.title}</strong></>} actions={<ButtonLink
         href={`/admin/projetos/${encodeURIComponent(project.slug)}/decisoes/novo`}
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary-strong"
       >
         Nova decisão técnica
-      </Link>
+      </ButtonLink>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Projetos", href: "/admin/projetos" }, { label: "Decisões técnicas" }]} />
 
       {decisions.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhuma decisão técnica cadastrada para este projeto.
-        </p>
+        <EmptyState title="Nenhuma decisão técnica cadastrada para este projeto." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
         <ul className="mt-8 space-y-6">
           {decisions.map((item) => (

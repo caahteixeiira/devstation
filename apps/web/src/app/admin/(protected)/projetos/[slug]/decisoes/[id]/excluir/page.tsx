@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listProjectDecisions } from "@/services/decisions.service";
@@ -47,22 +49,11 @@ export default async function DeleteDecisionPage({
   const decisionsPath = `/admin/projetos/${encodeURIComponent(project.slug)}/decisoes`;
 
   return (
-    <section className="max-w-2xl">
-      <Link
-        href={decisionsPath}
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às decisões técnicas
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">Excluir decisão técnica</h1>
-
-      <p className="mt-4 text-foreground-muted">
-        A decisão <strong className="text-foreground">{item.title}</strong> será
+    <section className="admin-page max-w-4xl admin-delete-page">
+      <AdminPageHeader actions={<ButtonLink href={decisionsPath} variant="secondary">Cancelar exclusão</ButtonLink>} title={<>Excluir decisão técnica</>} description={<>A decisão <strong className="text-foreground">{item.title}</strong> será
         removida definitivamente da administração e do portfólio. O projeto{" "}
         <strong className="text-foreground">{project.title}</strong> permanecerá
-        cadastrado.
-      </p>
+        cadastrado.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Decisões técnicas", href: decisionsPath }, { label: "Excluir decisão técnica" }]} />
 
       <DeleteDecisionForm
         action={deleteDecisionAction.bind(null, project.slug, item.id)}

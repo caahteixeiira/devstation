@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getProjectBySlug } from "@/services/projects.service";
@@ -34,19 +36,8 @@ export default async function NewDecisionPage({
   const decisionsPath = `/admin/projetos/${encodeURIComponent(project.slug)}/decisoes`;
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href={decisionsPath}
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às decisões técnicas
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">Nova decisão técnica</h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Projeto: <strong className="text-foreground">{project.title}</strong>
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href={decisionsPath} variant="secondary">Voltar</ButtonLink>} title={<>Nova decisão técnica</>} description={<>Projeto: <strong className="text-foreground">{project.title}</strong></>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Decisões técnicas", href: decisionsPath }, { label: "Nova decisão técnica" }]} />
 
       <CreateDecisionForm
         action={createDecisionAction.bind(null, project.slug)}

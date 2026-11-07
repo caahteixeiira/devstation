@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listRoadmapItems } from "@/services/roadmap.service";
@@ -41,22 +43,9 @@ export default async function EditRoadmapPage({
   const action = updateRoadmapAction.bind(null, item.id);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/roadmap"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar ao planejamento
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Editar item de planejamento
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Atualize o conteúdo, o status e a ordem do item.
-        As alterações aparecerão na página de Planejamento.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/roadmap" variant="secondary">Voltar</ButtonLink>} title={<>Editar item de planejamento</>} description={<>Atualize o conteúdo, o status e a ordem do item.
+        As alterações aparecerão na página de Planejamento.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Planejamento", href: "/admin/roadmap" }, { label: "Editar item de planejamento" }]} />
 
       <RoadmapForm
         key={item.id}

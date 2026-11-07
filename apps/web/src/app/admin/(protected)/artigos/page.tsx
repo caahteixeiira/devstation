@@ -1,3 +1,7 @@
+import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -43,36 +47,18 @@ export default async function AdminArticlesPage() {
   }
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
+    <section className="admin-page">
+      <AdminPageHeader title={<>Artigos</>} description={<>Artigos publicados, rascunhos e conteúdos arquivados.</>} actions={<ButtonLink
+        href="/admin/artigos/novo"
       >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Artigos
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Artigos publicados, rascunhos e conteúdos arquivados.
-      </p>
-
-      <Link
-  href="/admin/artigos/novo"
-  className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
->
-  Novo artigo
-</Link>
+        Novo artigo
+      </ButtonLink>} />
 
       {articles.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhum artigo cadastrado.
-        </p>
+        <EmptyState title="Nenhum artigo cadastrado." description="Use a ação de criação acima para adicionar o primeiro registro." />
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Artigos — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -117,39 +103,37 @@ export default async function AdminArticlesPage() {
                   </td>
 
                   <td className="px-4 py-4">
-                    {statusLabels[article.status]}
+                    <Badge dot tone={article.status === "PUBLISHED" ? "success" : article.status === "DRAFT" ? "accent" : "neutral"}>{statusLabels[article.status]}</Badge>
                   </td>
 
                   <td className="px-4 py-4">
-                    <Link
-                      href={`/admin/artigos/${encodeURIComponent(article.slug)}/editar`}
-                      aria-label={`Editar artigo ${article.title}`}
-                      className="mr-4 inline-block text-primary-strong hover:underline"
-                    >
-                      Editar
-                    </Link>
-
-                    <Link
-  href={`/admin/artigos/${encodeURIComponent(article.slug)}/excluir`}
-  aria-label={`Excluir artigo ${article.title}`}
-  className="mr-4 inline-block text-primary-strong hover:underline"
->
-  Excluir
-</Link>
-
-                    {article.status === "PUBLISHED" ? (
+                    <div className="admin-article-actions inline-flex items-center gap-5">
                       <Link
-                        href={`/artigos/${encodeURIComponent(article.slug)}`}
-                        aria-label={`Ver artigo ${article.title}`}
+                        href={`/admin/artigos/${encodeURIComponent(article.slug)}/editar`}
+                        aria-label={`Editar artigo ${article.title}`}
                         className="text-primary-strong hover:underline"
                       >
-                        Ver no portfólio →
+                        Editar
                       </Link>
-                    ) : (
-                      <span className="text-foreground-muted">
-                        Indisponível na área pública
-                      </span>
-                    )}
+
+                      <Link
+                        href={`/admin/artigos/${encodeURIComponent(article.slug)}/excluir`}
+                        aria-label={`Excluir artigo ${article.title}`}
+                        className="text-primary-strong hover:underline"
+                      >
+                        Excluir
+                      </Link>
+
+                      {article.status === "PUBLISHED" && (
+                        <Link
+                          href={`/artigos/${encodeURIComponent(article.slug)}`}
+                          aria-label={`Ver artigo ${article.title}`}
+                          className="text-primary-strong hover:underline"
+                        >
+                          Ver no portfólio →
+                        </Link>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

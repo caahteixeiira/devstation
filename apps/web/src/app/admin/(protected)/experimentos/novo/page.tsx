@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listProjects } from "@/services/projects.service";
 import { listTechnologies } from "@/services/technologies.service";
@@ -18,22 +20,9 @@ export default async function NewExperimentPage() {
   ]);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/experimentos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos experimentos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Novo experimento
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Registre uma ideia, um estudo ou uma prova de conceito
-        para apresentar no Laboratório.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/experimentos" variant="secondary">Voltar</ButtonLink>} title={<>Novo experimento</>} description={<>Registre uma ideia, um estudo ou uma prova de conceito
+        para apresentar no Laboratório.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Experimentos", href: "/admin/experimentos" }, { label: "Novo experimento" }]} />
 
       <CreateExperimentForm
         projects={projects}

@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listRoadmapItems } from "@/services/roadmap.service";
@@ -41,24 +43,11 @@ export default async function DeleteRoadmapPage({
   const action = deleteRoadmapAction.bind(null, item.id);
 
   return (
-    <section className="max-w-2xl">
-      <Link
-        href="/admin/roadmap"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar ao planejamento
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Excluir item de planejamento
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Você está prestes a excluir o item{" "}
+    <section className="admin-page max-w-4xl admin-delete-page">
+      <AdminPageHeader actions={<ButtonLink href="/admin/roadmap" variant="secondary">Cancelar exclusão</ButtonLink>} title={<>Excluir item de planejamento</>} description={<>Você está prestes a excluir o item{" "}
         <strong className="text-foreground">
           {item.title}
-        </strong>.
-      </p>
+        </strong>.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Planejamento", href: "/admin/roadmap" }, { label: "Excluir item de planejamento" }]} />
 
       <div className="mt-6 rounded-xl border border-border bg-surface p-6">
         <h2 className="text-lg font-semibold">

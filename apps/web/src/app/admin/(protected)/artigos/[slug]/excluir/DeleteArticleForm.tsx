@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/Button";
 
 import { useActionState, useState } from "react";
 import type { DeleteArticleActionState } from "./actions";
@@ -53,7 +54,7 @@ export function DeleteArticleForm({
               setConfirmation(event.target.value)
             }
             aria-describedby="confirmation-help"
-            className="mt-2 w-full rounded-lg border border-border-input bg-surface px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong"
+            className="admin-input"
           />
 
           <p
@@ -71,13 +72,12 @@ export function DeleteArticleForm({
           </p>
         )}
 
-        <button
-          type="submit"
+        <div className="admin-form-actions"><Button type="submit"
           disabled={pending || confirmation !== slug}
-          className="rounded-lg border border-border px-5 py-3 font-medium transition hover:border-primary-strong disabled:cursor-not-allowed disabled:opacity-60"
+          className="admin-button-danger"
         >
           {pending ? "Excluindo…" : "Excluir artigo definitivamente"}
-        </button>
+        </Button></div>
       </fieldset>
     </form>
   );

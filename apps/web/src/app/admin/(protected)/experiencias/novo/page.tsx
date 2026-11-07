@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listTechnologies } from "@/services/technologies.service";
 import { CreateExperienceForm } from "./CreateExperienceForm";
@@ -14,22 +16,9 @@ export default async function NewExperiencePage() {
   const technologies = await listTechnologies();
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/experiencias"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às experiências
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Nova experiência
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Cadastre uma experiência para apresentar sua trajetória
-        profissional na página Sobre.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/experiencias" variant="secondary">Voltar</ButtonLink>} title={<>Nova experiência</>} description={<>Cadastre uma experiência para apresentar sua trajetória
+        profissional na página Sobre.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Experiências", href: "/admin/experiencias" }, { label: "Nova experiência" }]} />
 
       <CreateExperienceForm technologies={technologies} />
     </section>

@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { listExperiences } from "@/services/experiences.service";
@@ -46,22 +48,9 @@ export default async function EditExperiencePage({
   const action = updateExperienceAction.bind(null, experience.id);
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/experiencias"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às experiências
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Editar experiência
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Atualize sua experiência em {experience.company}.
-        As alterações aparecerão na página Sobre.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/experiencias" variant="secondary">Voltar</ButtonLink>} title={<>Editar experiência</>} description={<>Atualize sua experiência em {experience.company}.
+        As alterações aparecerão na página Sobre.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Experiências", href: "/admin/experiencias" }, { label: "Editar experiência" }]} />
 
       <ExperienceForm
         key={experience.id}

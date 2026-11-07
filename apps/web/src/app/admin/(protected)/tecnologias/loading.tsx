@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/Skeleton";
 export default function TechnologiesLoading() {
   return (
     <section aria-busy="true">
@@ -8,6 +9,7 @@ export default function TechnologiesLoading() {
       <p role="status" className="mt-4 text-foreground-muted">
         Carregando tecnologias…
       </p>
+      <div className="admin-loading mt-6"><Skeleton className="h-9 w-2/3" /><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /></div>
     </section>
   );
 }

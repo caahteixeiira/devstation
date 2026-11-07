@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { CreateProjectForm } from "./CreateProjectForm";
 import { listTechnologies } from "@/services/technologies.service";
@@ -13,21 +15,8 @@ export default async function NewProjectPage() {
   const technologies = await listTechnologies();
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/projetos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos projetos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Novo projeto
-      </h1>
-
-      <p className="mt-4 leading-7 text-foreground-muted">
-        Preencha os dados principais do projeto.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/projetos" variant="secondary">Voltar</ButtonLink>} title={<>Novo projeto</>} description={<>Preencha os dados principais do projeto.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Projetos", href: "/admin/projetos" }, { label: "Novo projeto" }]} />
 
       <CreateProjectForm technologies={technologies} />
     </section>

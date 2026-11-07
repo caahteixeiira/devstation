@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { CreateRoadmapForm } from "./CreateRoadmapForm";
 
@@ -11,22 +13,9 @@ export default async function NewRoadmapPage() {
   await requireAdmin();
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/roadmap"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar ao planejamento
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Novo item de planejamento
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Registre uma etapa da evolução do DevStation.
-        O item aparecerá na página pública de Planejamento.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/roadmap" variant="secondary">Voltar</ButtonLink>} title={<>Novo item de planejamento</>} description={<>Registre uma etapa da evolução do DevStation.
+        O item aparecerá na página pública de Planejamento.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Planejamento", href: "/admin/roadmap" }, { label: "Novo item de planejamento" }]} />
 
       <CreateRoadmapForm />
     </section>

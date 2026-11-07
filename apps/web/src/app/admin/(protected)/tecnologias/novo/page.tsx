@@ -1,5 +1,7 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { CreateTechnologyForm } from "./CreateTechnologyForm";
 
@@ -11,22 +13,9 @@ export default async function NewTechnologyPage() {
   await requireAdmin();
 
   return (
-    <section className="max-w-2xl">
-      <Link
-        href="/admin/tecnologias"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar às tecnologias
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Nova tecnologia
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Cadastre uma tecnologia para vincular aos projetos,
-        experiências e experimentos.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/tecnologias" variant="secondary">Voltar</ButtonLink>} title={<>Nova tecnologia</>} description={<>Cadastre uma tecnologia para vincular aos projetos,
+        experiências e experimentos.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Tecnologias", href: "/admin/tecnologias" }, { label: "Nova tecnologia" }]} />
 
       <CreateTechnologyForm />
     </section>

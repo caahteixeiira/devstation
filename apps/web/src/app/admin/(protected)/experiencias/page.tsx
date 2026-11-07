@@ -1,3 +1,6 @@
+import { EmptyState } from "@/components/ui/EmptyState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { ButtonLink } from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
@@ -23,43 +26,19 @@ export default async function AdminExperiencesPage() {
   const experiences = await listExperiences();
 
   return (
-    <section>
-      <Link
-        href="/admin"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar à administração
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Experiências
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Experiências profissionais cadastradas no DevStation.
-      </p>
-
-      <Link
+    <section className="admin-page">
+      <AdminPageHeader title={<>Experiências</>} description={<>Experiências profissionais cadastradas no DevStation.</>} actions={<ButtonLink
         href="/admin/experiencias/novo"
-        className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition hover:bg-primary-strong"
       >
         Nova experiência
-      </Link>
-      <Link
-  href="/admin/experiencias"
-  className="mt-8 inline-flex rounded-lg border border-border bg-surface px-5 py-3 font-medium transition hover:border-primary-strong"
->
-  Gerenciar experiências →
-</Link>
+      </ButtonLink>} />
 
       {experiences.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-border bg-surface p-6 text-foreground-muted">
-          Nenhuma experiência cadastrada.
-        </p>
+        <EmptyState title="Nenhuma experiência cadastrada." description="Use a ação de criação acima para adicionar o primeiro registro." />
 
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full text-left text-sm">
+        <div className="admin-table-wrap border border-border" role="region" aria-label="Experiências — tabela" tabIndex={0}>
+          <table className="admin-table w-full text-left text-sm">
             <thead className="bg-surface-muted">
               <tr>
                 <th scope="col" className="px-4 py-3">
@@ -74,8 +53,8 @@ export default async function AdminExperiencesPage() {
                   Tecnologias
                 </th>
                 <th scope="col" className="px-4 py-3">
-  Ação
-</th>
+                  Ação
+                </th>
               </tr>
             </thead>
 
@@ -111,26 +90,26 @@ export default async function AdminExperiencesPage() {
                   <td className="px-4 py-4 text-foreground-muted">
                     {experience.technologies.length > 0
                       ? experience.technologies
-                          .map((technology) => technology.name)
-                          .join(", ")
+                        .map((technology) => technology.name)
+                        .join(", ")
                       : "Nenhuma tecnologia vinculada"}
                   </td>
                   <td className="px-4 py-4">
-  <Link
-    href={`/admin/experiencias/${experience.id}/editar`}
-    aria-label={`Editar experiência em ${experience.company}`}
-    className="text-primary-strong hover:underline"
-  >
-    Editar
-  </Link>
-  <Link
-  href={`/admin/experiencias/${experience.id}/excluir`}
-  aria-label={`Excluir experiência em ${experience.company}`}
-  className="ml-4 inline-block text-primary-strong hover:underline"
->
-  Excluir
-</Link>
-</td>
+                    <Link
+                      href={`/admin/experiencias/${experience.id}/editar`}
+                      aria-label={`Editar experiência em ${experience.company}`}
+                      className="text-primary-strong hover:underline"
+                    >
+                      Editar
+                    </Link>
+                    <Link
+                      href={`/admin/experiencias/${experience.id}/excluir`}
+                      aria-label={`Excluir experiência em ${experience.company}`}
+                      className="ml-4 inline-block text-primary-strong hover:underline"
+                    >
+                      Excluir
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

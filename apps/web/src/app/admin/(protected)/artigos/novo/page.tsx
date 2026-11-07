@@ -1,3 +1,5 @@
+import { ButtonLink } from "@/components/ui/Button";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
@@ -14,22 +16,9 @@ export default async function NewArticlePage() {
   const projects = await listProjects();
 
   return (
-    <section className="max-w-3xl">
-      <Link
-        href="/admin/artigos"
-        className="text-sm text-primary-strong hover:underline"
-      >
-        ← Voltar aos artigos
-      </Link>
-
-      <h1 className="mt-6 text-3xl font-semibold">
-        Novo artigo
-      </h1>
-
-      <p className="mt-4 text-foreground-muted">
-        Escreva seu conteúdo em Markdown e vincule-o a um projeto.
-        Salve como rascunho ou publique no portfólio.
-      </p>
+    <section className="admin-page max-w-4xl">
+      <AdminPageHeader actions={<ButtonLink href="/admin/artigos" variant="secondary">Voltar</ButtonLink>} title={<>Novo artigo</>} description={<>Escreva seu conteúdo em Markdown e vincule-o a um projeto.
+        Salve como rascunho ou publique no portfólio.</>} breadcrumb={[{ label: "Administração", href: "/admin" }, { label: "Artigos", href: "/admin/artigos" }, { label: "Novo artigo" }]} />
 
       {projects.length === 0 && (
         <Link
