@@ -63,8 +63,8 @@ async function CurrentExperience() {
  */
 export function HomeAbout() {
   return (
-    <HomeSection labelledBy="about-title" tone="surface">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1.4fr)] lg:gap-16">
+    <HomeSection labelledBy="about-title">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary-strong">
             Pessoal
@@ -77,18 +77,19 @@ export function HomeAbout() {
             Sobre mim
           </h2>
 
-          <ButtonLink href="/sobre" variant="secondary" className="mt-6">
-            Ver experiência completa
+          <ButtonLink href="/sobre" variant="ghost" className="mt-6">
+            Ver minha trajetória
             <ArrowRightIcon className="size-4" />
           </ButtonLink>
         </div>
 
         <div>
-          <figure className="border-l-2 border-accent-strong pl-6">
+          <figure className="about-quote border-l-2 pl-6 lg:pl-10">
             <blockquote className="max-w-2xl text-xl leading-9 text-foreground sm:text-2xl sm:leading-10">
-              Mais do que fazer uma funcionalidade funcionar, me interessa como
-              ela se encaixa no sistema, como será mantida e como poderá
-              evoluir.
+              Minha evolução acontece colocando a mão na massa: estudo um
+              conceito e procuro aplicá-lo onde consigo enxergar o problema
+              que ele resolve. Antes da tecnologia, vem o contexto; depois,
+              a responsabilidade de manter e evoluir o que construí.
             </blockquote>
 
             <figcaption className="mt-5">

@@ -19,30 +19,30 @@ const practices: Practice[] = [
   {
     title: "Backend e APIs",
     description:
-      "Serviços, contratos e regras de aplicação. No DevStation, toda resposta da API é validada antes de chegar à tela.",
+      "Serviços, contratos, integrações e regras de aplicação. No DevStation, as respostas da API são validadas antes de chegar à tela.",
     href: "/engenharia",
-    linkLabel: "Ver em Engenharia",
+    linkLabel: "Conhecer minha engenharia",
   },
   {
     title: "Arquitetura e decisões técnicas",
     description:
       "Antes de adotar uma tecnologia, entendo qual problema ela resolve e qual será sua responsabilidade. As decisões ficam registradas com contexto e consequências.",
     href: "/engenharia#decisions-title",
-    linkLabel: "Ver as decisões",
+    linkLabel: "Ver decisões técnicas",
   },
   {
     title: "Automação e confiabilidade",
     description:
       "Entender processos, identificar o que gera trabalho manual e transformar isso em software. Falhas são tratadas para afetar só a parte que depende delas.",
     href: "/sobre",
-    linkLabel: "Ler em Sobre mim",
+    linkLabel: "Ver minha trajetória",
   },
   {
     title: "Evolução contínua",
     description:
       "Estudo um conceito, aplico onde consigo enxergar o problema e registro o que aprendi em experimentos, artigos e no planejamento do próprio DevStation.",
     href: "/laboratorio",
-    linkLabel: "Ver o Laboratório",
+    linkLabel: "Ver experimentos",
   },
 ];
 
@@ -53,7 +53,7 @@ export function HowIWork() {
   return (
     <HomeSection labelledBy="how-i-work-title">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-        <div className="lg:sticky lg:top-20 lg:self-start">
+        <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary-strong">
             Engenharia na prática
           </p>
@@ -74,14 +74,14 @@ export function HowIWork() {
           <ButtonLink
             href="/engenharia"
             variant="secondary"
-            className="mt-6"
+            className="public-button public-button-outline mt-6"
           >
-            Ver a engenharia do DevStation
+            Conhecer minha engenharia
             <ArrowRightIcon className="size-4" />
           </ButtonLink>
         </div>
 
-        <ol className="divide-y divide-border border-y border-border">
+        <ol className="practice-list divide-y divide-border border border-border">
           {practices.map((practice, index) => (
             <li
               key={practice.title}
@@ -89,9 +89,9 @@ export function HowIWork() {
             >
               <span
                 aria-hidden="true"
-                className="font-mono text-sm text-primary-strong"
+                className="editorial-number"
               >
-                {String(index + 1).padStart(2, "0")}
+                {String(index + 1).padStart(2, "0")}.
               </span>
 
               <div>

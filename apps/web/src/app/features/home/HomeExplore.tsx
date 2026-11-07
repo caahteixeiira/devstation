@@ -3,10 +3,10 @@ import type { ComponentType, SVGProps } from "react";
 import { cardClassName } from "@/components/ui/Card";
 import {
   ArrowRightIcon,
-  BookIcon,
-  EngineeringIcon,
+  FileTextIcon,
+  BracesIcon,
   FlaskIcon,
-  MapIcon,
+  CalendarIcon,
 } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { cx } from "@/lib/cx";
@@ -19,6 +19,7 @@ type Area = {
   description: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   tone: "primary" | "accent";
+  surface: "neutral" | "lilac" | "blush";
 };
 
 const areas: Area[] = [
@@ -27,17 +28,19 @@ const areas: Area[] = [
     eyebrow: "Construção técnica",
     title: "Engenharia",
     description:
-      "Arquitetura do DevStation, princípios, decisões técnicas e estratégia de qualidade.",
-    icon: EngineeringIcon,
+      "Arquitetura, decisões e estrutura técnica do próprio DevStation.",
+    icon: BracesIcon,
+    surface: "lilac",
     tone: "primary",
   },
   {
     href: "/artigos",
-    eyebrow: "Ideias e aprendizados",
+    eyebrow: "Ideias & aprendizados",
     title: "Artigos",
     description:
-      "Aprendizados e decisões registrados durante o desenvolvimento.",
-    icon: BookIcon,
+      "Anotações sobre decisões técnicas, conceitos estudados e desenvolvimento de software.",
+    icon: FileTextIcon,
+    surface: "neutral",
     tone: "primary",
   },
   {
@@ -45,8 +48,9 @@ const areas: Area[] = [
     eyebrow: "Experimentação",
     title: "Laboratório",
     description:
-      "Experimentos e provas de conceito: hipóteses, resultados e o que ainda está em exploração.",
+      "Experimentos, hipóteses técnicas e resultados.",
     icon: FlaskIcon,
+    surface: "blush",
     tone: "accent",
   },
   {
@@ -54,8 +58,9 @@ const areas: Area[] = [
     eyebrow: "Próximos passos",
     title: "Planejamento",
     description:
-      "O que está em andamento, o que vem a seguir e o que já foi concluído no DevStation.",
-    icon: MapIcon,
+      "Roadmap e evolução do DevStation.",
+    icon: CalendarIcon,
+    surface: "neutral",
     tone: "primary",
   },
 ];
@@ -81,12 +86,6 @@ export function HomeExplore() {
         eyebrow="Explorar"
         title="Explorar o DevStation"
         description="Cada área responde a uma pergunta diferente: como decidi, o que aprendi, o que estou testando e para onde vou."
-        action={
-          <Link href="/projetos" className={projectsLinkStyles}>
-            Ver projetos
-            <ArrowRightIcon className="size-4" />
-          </Link>
-        }
       />
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -97,14 +96,15 @@ export function HomeExplore() {
             <li key={area.href}>
               <Link
                 href={area.href}
+                data-tone={area.surface}
                 className={cardClassName(
                   { interactive: true, padding: "lg" },
-                  "group flex h-full flex-col",
+                  "explore-card group flex h-full cursor-pointer flex-col",
                 )}
               >
                 <span
                   className={cx(
-                    "flex size-10 items-center justify-center rounded-md border",
+                    "explore-icon flex size-11 items-center justify-center",
                     iconToneStyles[area.tone],
                   )}
                 >
@@ -113,14 +113,14 @@ export function HomeExplore() {
 
                 <p
                   className={cx(
-                    "mt-6 font-mono text-[11px] uppercase tracking-[0.18em]",
+                    "explore-eyebrow mt-10 text-[11px] font-bold uppercase tracking-[0.18em]",
                     eyebrowToneStyles[area.tone],
                   )}
                 >
                   {area.eyebrow}
                 </p>
 
-                <h3 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
+                <h3 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
                   {area.title}
                 </h3>
 
@@ -129,7 +129,7 @@ export function HomeExplore() {
                 </p>
 
                 <span className="mt-auto flex items-center gap-1 pt-6 font-mono text-xs text-foreground-subtle transition-colors group-hover:text-primary-strong motion-reduce:transition-none">
-                  Explorar
+                  {area.title === "Artigos" ? "Ler artigos" : `Ver ${area.title.toLowerCase()}`}
                   <ArrowRightIcon className="size-3.5" />
                 </span>
               </Link>
@@ -137,6 +137,10 @@ export function HomeExplore() {
           );
         })}
       </ul>
+      <Link href="/projetos" className={`${projectsLinkStyles} mt-7`}>
+        Ver projetos
+        <ArrowRightIcon className="size-4" />
+      </Link>
     </HomeSection>
   );
 }

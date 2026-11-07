@@ -9,10 +9,10 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-background px-6 py-8 lg:px-10">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 text-sm sm:flex-row sm:items-center sm:justify-between">
+    <footer className="public-footer border-t border-border bg-background py-8">
+      <div className="public-container public-gutter flex flex-col gap-6 px-6 text-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-mono font-semibold text-foreground">
+          <p className="font-semibold text-foreground">
             {siteConfig.name}
           </p>
 
@@ -51,6 +51,16 @@ export function Footer() {
                 GitHub
                 <ArrowUpRightIcon className="size-3.5" />
               </a>
+            </li>
+            <li>
+              <Link href="/" className={footerLinkStyles}>
+                Voltar ao início
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/login" className={`${footerLinkStyles} text-xs`}>
+                Área administrativa
+              </Link>
             </li>
           </ul>
         </nav>

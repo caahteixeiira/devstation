@@ -33,11 +33,11 @@ export function PageIntro({
     accent === "accent" ? "text-accent-strong" : "text-primary-strong";
 
   return (
-    <div className="flex flex-1 px-6 py-12 lg:px-10 lg:py-16">
+    <div className="public-container public-gutter flex flex-1 px-6 py-12 lg:py-20">
       <section
         className={cx(
           "mx-auto w-full",
-          width === "narrow" ? "max-w-3xl" : "max-w-7xl",
+          width === "narrow" ? "max-w-3xl" : "max-w-none",
         )}
       >
         {breadcrumb && <Breadcrumb items={breadcrumb} className="mb-6" />}
@@ -51,7 +51,7 @@ export function PageIntro({
             </p>
 
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h1 className="public-page-title">
                 {title}
               </h1>
 

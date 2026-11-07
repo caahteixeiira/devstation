@@ -12,15 +12,13 @@ type HomeSectionProps = {
 
 /**
  * Faixa de largura total da Home. A alternância de tons dá ritmo entre os
- * blocos; `inverted` troca fundo e texto no tema claro e, no escuro, usa a
- * superfície secundária para manter contraste sem um bloco escuro sobre
- * fundo escuro.
+ * blocos; `inverted` usa a faixa de contato, com tokens próprios para manter
+ * o convite escuro e legível nos dois temas.
  */
 const toneStyles: Record<HomeSectionTone, string> = {
   default: "bg-background",
   surface: "bg-surface",
-  inverted:
-    "bg-foreground text-background dark:bg-surface-muted dark:text-foreground",
+  inverted: "contact-band",
 };
 
 export function HomeSection({
@@ -38,7 +36,7 @@ export function HomeSection({
         className,
       )}
     >
-      <div className="mx-auto w-full max-w-7xl px-6 py-16 lg:px-10 lg:py-20">
+      <div className="public-container public-gutter home-section-content px-6 py-16">
         {children}
       </div>
     </section>

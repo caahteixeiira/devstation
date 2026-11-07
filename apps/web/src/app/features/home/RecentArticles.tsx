@@ -28,7 +28,7 @@ export async function RecentArticles() {
         title="Artigos recentes"
         action={
           <ButtonLink href="/artigos" variant="ghost" size="sm">
-            Todos os artigos
+            Ver artigos
             <ArrowRightIcon className="size-4" />
           </ButtonLink>
         }
@@ -42,22 +42,25 @@ export async function RecentArticles() {
             <li key={article.id}>
               <Link
                 href={`/artigos/${encodeURIComponent(article.slug)}`}
-                className="group grid gap-1 rounded-sm py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6"
+                className="group grid gap-2 rounded-sm py-6 transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transition-none sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6"
               >
                 <span className="font-mono text-xs text-primary-strong">
                   {article.category}
                 </span>
 
-                <span className="font-medium text-foreground transition-colors group-hover:text-primary-strong motion-reduce:transition-none">
+                <h3 className="recent-article-title text-foreground transition-colors group-hover:text-primary-strong motion-reduce:transition-none">
                   {article.title}
-                </span>
+                </h3>
 
-                <time
-                  dateTime={date}
-                  className="font-mono text-xs text-foreground-subtle"
-                >
-                  {formatDate(date)}
-                </time>
+                <span className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+                  <time dateTime={date} className="font-mono text-xs text-foreground-subtle">
+                    {formatDate(date)}
+                  </time>
+                  <span className="inline-flex items-center gap-2 text-sm font-medium text-primary-strong">
+                    Ler artigo
+                    <ArrowRightIcon className="size-4 self-center" />
+                  </span>
+                </span>
               </Link>
             </li>
           );

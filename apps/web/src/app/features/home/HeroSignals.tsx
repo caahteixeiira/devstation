@@ -8,14 +8,14 @@ type ManifestLineProps = {
 
 export function ManifestLine({ label, children }: ManifestLineProps) {
   return (
-    <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3">
-      <dt className="text-primary-strong">{label}</dt>
-      <dd className="break-words text-foreground-muted">{children}</dd>
+    <div className="space-y-2">
+      <dt className="text-[11px] font-medium uppercase tracking-[0.18em] text-primary-strong">{label}</dt>
+      <dd className="break-words text-base leading-7 text-foreground">{children}</dd>
     </div>
   );
 }
 
-/** Linha "stack" do painel técnico, derivada das tecnologias dos projetos. */
+/** Linha "Tecnologias" do painel técnico, derivada das tecnologias dos projetos. */
 export async function HeroStack() {
   const projects = await getHomeProjects();
 
@@ -29,5 +29,5 @@ export async function HeroStack() {
     return null;
   }
 
-  return <ManifestLine label="stack">{stack.join(", ")}</ManifestLine>;
+  return <ManifestLine label="Tecnologias">{stack.join(" · ")}</ManifestLine>;
 }
