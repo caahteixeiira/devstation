@@ -57,7 +57,6 @@ function getServerTheme(): Theme {
 export function ThemeToggle() {
   const theme = useSyncExternalStore(subscribe, getTheme, getServerTheme);
   const isDark = theme === "dark";
-  const label = isDark ? "Ativar modo claro" : "Ativar modo escuro";
 
   function toggleTheme() {
     const next = getTheme() === "dark" ? "light" : "dark";
@@ -74,12 +73,13 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={label}
-      title={label}
-      className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+      aria-label="Tema escuro"
+      aria-pressed={isDark}
+      title={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+      className="public-theme-toggle inline-flex min-h-11 min-w-24 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-border-strong bg-surface px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
     >
-      {isDark ? <SunIcon /> : <MoonIcon />}
-      <span className="hidden xl:inline">{isDark ? "Claro" : "Escuro"}</span>
+      <span className="public-theme-light inline-flex items-center gap-2"><SunIcon />Claro</span>
+      <span className="public-theme-dark inline-flex items-center gap-2"><MoonIcon />Dark</span>
     </button>
   );
 }

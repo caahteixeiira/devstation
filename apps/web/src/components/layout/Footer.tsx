@@ -57,6 +57,14 @@ export function Footer() {
                 Voltar ao início
               </Link>
             </li>
+            {siteConfig.links.linkedin && (
+              <li>
+                <a href={siteConfig.links.linkedin} target="_blank" rel="noopener noreferrer" className={footerLinkStyles}>
+                  LinkedIn
+                  <ArrowUpRightIcon className="size-3.5" />
+                </a>
+              </li>
+            )}
             <li>
               <Link href="/admin/login" className={`${footerLinkStyles} text-xs`}>
                 Área administrativa

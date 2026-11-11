@@ -5,6 +5,7 @@ import { AsteriskIcon } from "@/components/ui/icons";
 
 type BrandProps = {
   compact?: boolean;
+  compactOnMobile?: boolean;
   className?: string;
   onNavigate?: () => void;
 };
@@ -12,7 +13,7 @@ type BrandProps = {
 /**
  * Marca pública do DevStation. Sempre leva para "/".
  */
-export function Brand({ compact = false, className, onNavigate }: BrandProps) {
+export function Brand({ compact = false, compactOnMobile = false, className, onNavigate }: BrandProps) {
   return (
     <Link
       href="/"
@@ -24,7 +25,7 @@ export function Brand({ compact = false, className, onNavigate }: BrandProps) {
     >
       <span
         aria-hidden="true"
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground text-xl text-background transition-colors group-hover:bg-primary-strong motion-reduce:transition-none"
+        className={cx("size-10 shrink-0 items-center justify-center rounded-full bg-foreground text-xl text-background transition-colors group-hover:bg-primary-strong motion-reduce:transition-none", compactOnMobile ? "hidden sm:flex" : "flex")}
       >
         <AsteriskIcon />
       </span>
@@ -35,7 +36,7 @@ export function Brand({ compact = false, className, onNavigate }: BrandProps) {
         </span>
 
         {!compact && (
-          <span className="text-[11px] text-foreground-subtle">
+          <span className={cx("text-[11px] text-foreground-subtle", compactOnMobile && "hidden sm:block")}>
             Portfólio de engenharia
           </span>
         )}

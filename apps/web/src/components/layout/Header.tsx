@@ -7,7 +7,7 @@ import { NavList } from "./NavList";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
- * Header público horizontal a partir de lg. O menu móvel abre como painel
+ * Header público horizontal a partir de xl. O menu móvel abre como painel
  * sobreposto e fecha ao navegar, ao clicar fora ou ao pressionar Escape.
  */
 export function Header() {
@@ -17,9 +17,9 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
       <div className="public-container relative">
         <div className="public-gutter flex min-h-20 items-center justify-between gap-3 px-6">
-          <Brand onNavigate={closeMenu} className="shrink-0" />
+          <Brand onNavigate={closeMenu} compactOnMobile className="shrink-0" />
           <div className="ml-auto flex min-w-0 items-center gap-2 lg:gap-3">
-            <NavList ariaLabel="Navegação principal" horizontal className="hidden lg:block" />
+            <NavList ariaLabel="Navegação principal" horizontal className="hidden xl:block" />
             <ThemeToggle />
 
             <button
@@ -29,7 +29,7 @@ export function Header() {
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
               onClick={() => setIsMenuOpen((currentState) => !currentState)}
-              className="flex size-11 shrink-0 lg:hidden items-center justify-center rounded-control text-foreground-muted transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+              className="flex size-11 shrink-0 xl:hidden items-center justify-center rounded-control text-foreground-muted transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
@@ -40,7 +40,7 @@ export function Header() {
           <div
             ref={panelRef}
             id="mobile-navigation"
-            className="absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto lg:hidden border-b border-border bg-surface px-4 py-4 shadow-card"
+              className="absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto xl:hidden border-b border-border bg-surface px-4 py-4 shadow-card"
           >
             <NavList ariaLabel="Navegação móvel" onNavigate={closeMenu} />
           </div>

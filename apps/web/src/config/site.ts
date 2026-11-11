@@ -1,7 +1,7 @@
 /**
  * Dados públicos do site, centralizados para não espalhar links e nomes
  * pelos componentes. Valores `null` indicam dado ainda não informado:
- * quem consome deve omitir o item em vez de renderizar um link quebrado.
+ * quem consome deve omitir o link ou desabilitar a ação até o preenchimento.
  */
 export type SiteConfig = {
   name: string;
@@ -34,7 +34,7 @@ export const siteConfig: SiteConfig = {
   engineeringProjectSlug: "devstation",
   links: {
     github: "https://github.com/caahteixeiira",
-    linkedin: null,
-    email: null,
+    linkedin: null, // TODO: preencher com a URL pública completa do seu LinkedIn.
+    email: null, // TODO: preencher com seu e-mail público de contato (sem mailto:).
   },
 };

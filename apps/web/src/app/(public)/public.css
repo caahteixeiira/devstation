@@ -129,7 +129,7 @@
 .public-site .contact-band h2 { max-width: 42rem; color: inherit; font-size: clamp(2.25rem, 3.2vw, 2.625rem); }
 .public-site .contact-band p { color: #ddc6d6; }
 .public-site .contact-channel { border: 1px solid #a88f9c; border-radius: 999px; color: #faf6f2; }
-.public-site .contact-channel:hover { background: #44333e; }
+.public-site .contact-channel:not(:disabled):hover { background: #44333e; }
 .public-site .contact-channel:focus-visible { outline: 2px solid #e5d9eb; outline-offset: 4px; }
 .public-site .recent-article-title { font-family: var(--editorial-font); font-size: 1.5rem; line-height: 1.35; }
 .public-site :focus-visible { outline-offset: 4px; }
@@ -159,6 +159,20 @@
 
 .public-site[data-public-theme="light"] { color-scheme: light; }
 .public-site[data-public-theme="dark"] { color-scheme: dark; }
+
+/* The bootstrap also sets the visible label before React hydrates. */
+.public-site .public-theme-dark { display: none; }
+.public-site[data-public-theme="dark"] .public-theme-light { display: none; }
+.public-site[data-public-theme="dark"] .public-theme-dark { display: inline-flex; }
+.public-site[data-public-theme="dark"] .public-theme-toggle { background: var(--surface-muted); }
+.public-site .contact-channel:disabled { cursor: not-allowed; opacity: 0.6; }
+.public-site .contact-channel-primary { background: var(--contact-foreground); color: var(--contact-background); }
+.public-site .contact-channel-primary:not(:disabled):hover { background: #ddc6d6; }
+
+@media (prefers-color-scheme: dark) {
+  .public-site:not([data-public-theme]) .public-theme-light { display: none; }
+  .public-site:not([data-public-theme]) .public-theme-dark { display: inline-flex; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .public-site *, .public-site *::before, .public-site *::after {

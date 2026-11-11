@@ -22,6 +22,13 @@ A aplicação sobe em `http://localhost:3000` e consome a API definida em `API_B
 - `src/config/site.ts`: dados públicos do site (nome, links, slugs de destaque).
 - `src/app/globals.css`: design tokens (cores, raios, sombra) nos temas claro e escuro.
 
+## Contato público
+
+Preencha `links.email` (endereço sem `mailto:`) e `links.linkedin` (URL pública
+completa) em `src/config/site.ts`. Os valores `null` são placeholders explícitos:
+as ações de contato ficam desabilitadas até o preenchimento. O LinkedIn também
+aparece automaticamente no footer quando configurado. O GitHub atual é preservado.
+
 ## Scripts
 
 - `pnpm dev`: servidor de desenvolvimento.

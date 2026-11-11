@@ -85,8 +85,8 @@ async function ProjectsContent() {
         <EmptyState
           className="mt-12"
           icon={<FolderIcon />}
-          title="Nenhum projeto disponível ainda."
-          description="Os case studies aparecem aqui assim que forem cadastrados."
+          title="Nenhum projeto publicado ainda."
+          description="Novos projetos e estudos aparecerão aqui em breve."
         />
       ) : (
         <>
