@@ -100,3 +100,128 @@ pnpm --filter api exec prisma validate --config prisma7.config.ts
 O lint disponível é o da Web. `/health` continua sendo liveness sem consulta ao banco;
 readiness de banco fica como evolução futura. Nenhum comando de build/check acima
 executa migrations ou seed. A preparação não cria serviços nem realiza deploy.
+
+
+## Produção atual
+
+Arquitetura:
+
+Vercel
+  → Next.js
+  → https://devstation-lime.vercel.app
+
+Render
+  → Fastify API
+  → https://devstation-api.onrender.com
+
+Supabase
+  → PostgreSQL
+  → Session Pooler
+
+### Frontend
+
+Plataforma: Vercel
+
+Root Directory:
+apps/web
+
+Variáveis:
+
+API_BASE_URL=https://devstation-api.onrender.com
+
+### API
+
+Plataforma: Render
+
+Build:
+pnpm install --frozen-lockfile && pnpm --filter api build
+
+Start:
+pnpm --filter api start
+
+Health Check:
+GET /health
+
+Variáveis obrigatórias:
+
+DATABASE_URL
+JWT_SECRET
+NODE_ENV=production
+CORS_ORIGIN=https://devstation-lime.vercel.app
+
+TRUST_PROXY não está configurado atualmente.
+
+### Banco de dados
+
+Plataforma: Supabase PostgreSQL
+
+A aplicação utiliza o Session Pooler.
+
+O Prisma usa o certificado:
+
+apps/api/certs/prod-ca-2021.crt
+
+A conexão TLS é configurada em:
+
+apps/api/src/lib/prisma.ts
+
+A migration inicial aplicada em produção é:
+
+20260827172841_init
+
+### Admin
+
+O usuário Admin é persistido no PostgreSQL.
+
+Scripts administrativos:
+
+pnpm --filter api admin:create
+pnpm --filter api admin:reset-password
+
+As variáveis ADMIN_EMAIL e ADMIN_PASSWORD devem ser fornecidas somente no momento da execução dos scripts.
+
+Nunca versionar:
+
+.env
+.env.production.local
+DATABASE_URL
+JWT_SECRET
+ADMIN_PASSWORD
+
+### Validação de produção
+
+API:
+
+GET /health
+
+Auth:
+
+POST /auth/login
+GET /auth/me
+
+Fluxo:
+
+Vercel
+  → Render
+  → Supabase
+
+
+  ## Em caso de problema
+
+Frontend não carrega dados:
+- verificar API_BASE_URL no Vercel
+- verificar se a API está online no Render
+- testar /health
+
+Erro de CORS:
+- verificar CORS_ORIGIN no Render
+
+Erro de banco:
+- verificar DATABASE_URL
+- verificar certificado prod-ca-2021.crt
+- testar conexão com Supabase
+
+Erro de login:
+- testar /auth/login
+- verificar ADMIN_EMAIL
+- usar admin:reset-password se necessário
