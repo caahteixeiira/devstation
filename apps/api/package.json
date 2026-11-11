@@ -10,7 +10,9 @@
     "prisma:generate": "prisma generate --config prisma7.config.ts",
     "migrate:deploy": "prisma migrate deploy --config prisma7.config.ts",
     "migrate:dev": "prisma migrate dev --config prisma7.config.ts",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "admin:reset-password": "tsx prisma/resetAdminPassword.ts",
+    "admin:create": "tsx prisma/createAdmin.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.3.1",
