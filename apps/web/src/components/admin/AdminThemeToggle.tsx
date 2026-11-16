@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Button } from "@/components/ui/Button";
 import { MoonIcon, SunIcon } from "@/components/ui/icons";
 import { ADMIN_THEME_EVENT, ADMIN_THEME_STORAGE_KEY } from "./admin-theme";
 
@@ -71,9 +70,11 @@ export function AdminThemeToggle() {
   }
 
   return (
-    <Button variant="secondary" onClick={toggleTheme} aria-label={label} title={label} className="min-w-11 shrink-0 px-3">
-      {isDark ? <SunIcon /> : <MoonIcon />}
-      <span className="hidden xl:inline">{isDark ? "Claro" : "Escuro"}</span>
-    </Button>
+    <button type="button" onClick={toggleTheme} aria-label="Tema escuro" aria-pressed={isDark} title={label} className="theme-switch relative inline-flex h-11 w-20 shrink-0 cursor-pointer items-center rounded-full border border-border-input bg-surface-muted p-1 text-foreground transition-colors hover:border-primary-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none">
+      <span aria-hidden="true" className="theme-switch-thumb flex size-8 items-center justify-center rounded-full bg-background text-primary-strong shadow-sm">
+        <SunIcon className="admin-theme-light" />
+        <MoonIcon className="admin-theme-dark" />
+      </span>
+    </button>
   );
 }

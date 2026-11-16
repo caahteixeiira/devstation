@@ -76,10 +76,12 @@ export function ThemeToggle() {
       aria-label="Tema escuro"
       aria-pressed={isDark}
       title={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-      className="public-theme-toggle inline-flex min-h-11 min-w-24 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-border-strong bg-surface px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+      className="theme-switch public-theme-toggle relative inline-flex h-11 w-20 shrink-0 cursor-pointer items-center rounded-full border border-border-input bg-surface-muted p-1 text-foreground transition-colors hover:border-primary-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-strong focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
     >
-      <span className="public-theme-light inline-flex items-center gap-2"><SunIcon />Claro</span>
-      <span className="public-theme-dark inline-flex items-center gap-2"><MoonIcon />Dark</span>
+      <span aria-hidden="true" className="theme-switch-thumb flex size-8 items-center justify-center rounded-full bg-background text-primary-strong shadow-sm">
+        <SunIcon className="public-theme-light" />
+        <MoonIcon className="public-theme-dark" />
+      </span>
     </button>
   );
 }

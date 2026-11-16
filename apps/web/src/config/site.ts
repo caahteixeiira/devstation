@@ -34,7 +34,7 @@ export const siteConfig: SiteConfig = {
   engineeringProjectSlug: "devstation",
   links: {
     github: "https://github.com/caahteixeiira",
-    linkedin: null, // TODO: preencher com a URL pública completa do seu LinkedIn.
-    email: null, // TODO: preencher com seu e-mail público de contato (sem mailto:).
+    linkedin: "https://www.linkedin.com/in/carolineteixeiraa/",
+    email: "carol.barcelos1999@gmail.com",
   },
 };

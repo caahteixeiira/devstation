@@ -169,6 +169,10 @@
 .public-site .contact-channel-primary { background: var(--contact-foreground); color: var(--contact-background); }
 .public-site .contact-channel-primary:not(:disabled):hover { background: #ddc6d6; }
 
+.public-site .contact-intro-panel { background: var(--card-blush); }
+.public-site .contact-github-panel { background: var(--card-lilac); }
+.public-site .contact-form-panel { background: var(--card-background); }
+
 @media (prefers-color-scheme: dark) {
   .public-site:not([data-public-theme]) .public-theme-light { display: none; }
   .public-site:not([data-public-theme]) .public-theme-dark { display: inline-flex; }

@@ -122,3 +122,21 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans);
 }
+
+.theme-switch-thumb { transition: transform 180ms ease-out; }
+.public-site[data-public-theme="dark"] .theme-switch-thumb,
+.admin-site[data-admin-theme="dark"] .theme-switch-thumb { transform: translateX(2.375rem); }
+.admin-site .admin-theme-dark { display: none; }
+.admin-site[data-admin-theme="dark"] .admin-theme-light { display: none; }
+.admin-site[data-admin-theme="dark"] .admin-theme-dark { display: block; }
+
+@media (prefers-color-scheme: dark) {
+  .public-site:not([data-public-theme]) .theme-switch-thumb,
+  .admin-site:not([data-admin-theme]) .theme-switch-thumb { transform: translateX(2.375rem); }
+  .admin-site:not([data-admin-theme]) .admin-theme-light { display: none; }
+  .admin-site:not([data-admin-theme]) .admin-theme-dark { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch-thumb { transition: none; }
+}
