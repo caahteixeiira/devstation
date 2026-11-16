@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { Suspense } from "react";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CertificationsSection } from "@/app/features/certifications/CertificationsSection";
-import {
-  ExperienceTimeline,
-  ExperienceTimelineSkeleton,
-} from "@/app/features/experiences/ExperienceTimeline";
+import { AboutExperienceTimeline } from "@/app/features/experiences/AboutExperienceTimeline";
 
 export const metadata: Metadata = {
   title: "Sobre mim",
@@ -37,7 +33,8 @@ export default async function SobrePage() {
 
         <div className="mt-5 max-w-3xl space-y-5 text-lg leading-8 text-foreground-muted">
           <p>
-            Sou desenvolvedora com foco em back-end e automação. Gosto de
+            Sou desenvolvedora de software com foco em back-end, automação e
+            engenharia de software. Gosto de
             entender processos, identificar problemas e transformá-los em
             soluções que reduzam trabalho manual e tornem as rotinas mais
             simples e organizadas.
@@ -48,6 +45,14 @@ export default async function SobrePage() {
             entender como ela se encaixa no sistema, como será mantida e como
             poderá evoluir no futuro.
           </p>
+
+          <p>
+            Hoje também venho aprofundando meus estudos em arquitetura de
+            software, DevOps e Inteligência Artificial, com foco em evoluir para
+            uma atuação como AI Builder, criando aplicações que integrem IA a
+            produtos e processos reais. É uma direção de desenvolvimento que
+            complementa minha base em software, back-end e automação.
+          </p>
         </div>
       </section>
 
@@ -56,13 +61,11 @@ export default async function SobrePage() {
           id="experience-title"
           eyebrow="Trajetória"
           title="Experiência profissional"
-          description="Da mais recente para a mais antiga."
+          description="Uma trajetória que conecta desenvolvimento de software, automação e processos reais."
         />
 
-        <div className="mt-6">
-          <Suspense fallback={<ExperienceTimelineSkeleton />}>
-            <ExperienceTimeline />
-          </Suspense>
+        <div className="mt-8">
+          <AboutExperienceTimeline />
         </div>
       </section>
 
@@ -107,10 +110,10 @@ export default async function SobrePage() {
             </p>
 
             <p className="mt-3 leading-7 text-foreground-muted">
-              Hoje estou aprofundando meus conhecimentos em desenvolvimento
-              back-end, arquitetura, bancos de dados, processamento assíncrono,
-              testes e infraestrutura, sempre buscando evoluir não apenas na
-              escrita de código, mas na forma de projetar software.
+              Sigo fortalecendo minha base em back-end, bancos de dados,
+              processamento assíncrono e testes. Os estudos em arquitetura de
+              software, DevOps e construção de aplicações com IA ampliam essa
+              base, sempre conectando o aprendizado a problemas concretos.
             </p>
           </Card>
         </div>
