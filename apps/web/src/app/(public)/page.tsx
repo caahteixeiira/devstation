@@ -6,6 +6,7 @@ import { HomeExplore } from "@/app/features/home/HomeExplore";
 import { HomeHero } from "@/app/features/home/HomeHero";
 import { HowIWork } from "@/app/features/home/HowIWork";
 import { RecentArticles } from "@/app/features/home/RecentArticles";
+import { FeaturedCertifications } from "@/app/features/home/FeaturedCertifications";
 
 export default async function Home() {
   // Garante renderização em tempo de requisição: nada é buscado no build.
@@ -23,6 +24,7 @@ export default async function Home() {
       </Suspense>
 
       <HomeAbout />
+      <Suspense fallback={null}><FeaturedCertifications /></Suspense>
       <HomeContact />
     </div>
   );

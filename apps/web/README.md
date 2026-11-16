@@ -29,6 +29,22 @@ completa) em `src/config/site.ts`. Os valores `null` são placeholders explícit
 as ações de contato ficam desabilitadas até o preenchimento. O LinkedIn também
 aparece automaticamente no footer quando configurado. O GitHub atual é preservado.
 
+## Certificações
+
+A coleção `/certificacoes`, a seção Sobre (até quatro itens) e a Home (até três
+destaques) consomem a API real. Lista vazia usa EmptyState, falha real usa ErrorState
+e o carregamento usa os skeletons existentes. A fonte local foi removida.
+
+Cadastre em `/admin/certificacoes`; após salvar, envie a imagem na edição. As
+competências usam o catálogo de tecnologias. Imagens de projetos são gerenciadas
+na edição do projeto, separadamente do conteúdo editorial. O envio passa pelo
+servidor Next/API autenticada e persiste no Supabase Storage, sem arquivos em `public/`.
+
+Preencha `SUPABASE_STORAGE_PUBLIC_URL` no ambiente Web com a URL pública do bucket
+(sem chaves, com `/` final) para permitir o host/caminho exatos em `next/image`.
+O modal público de certificados mantém fechamento por botão/Esc e retorno do foco.
+Veja [configuração, migration, rotas, testes e recuperação de falhas](../../docs/storage.md).
+
 ## Scripts
 
 - `pnpm dev`: servidor de desenvolvimento.

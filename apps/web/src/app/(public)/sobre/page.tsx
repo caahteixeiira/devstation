@@ -6,6 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { CertificationsSection } from "@/app/features/certifications/CertificationsSection";
 import {
   ExperienceTimeline,
   ExperienceTimelineSkeleton,
@@ -64,6 +65,8 @@ export default async function SobrePage() {
           </Suspense>
         </div>
       </section>
+
+      <CertificationsSection />
 
       <section aria-labelledby="mindset-title" className="mt-16">
         <SectionHeader
