@@ -1,5 +1,8 @@
 # DevStation
 
+Certificações e imagens administráveis: consulte [o guia de Supabase Storage](storage.md)
+para variáveis do Render/Vercel, bucket, migration e validação manual de release.
+
 Monorepo pnpm/Turborepo: `apps/web` (Next.js) e `apps/api` (Fastify/PostgreSQL).
 
 ## Ambiente
