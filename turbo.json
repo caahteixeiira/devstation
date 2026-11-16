@@ -5,7 +5,16 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "src/generated/prisma/**"],
       "env": ["API_BASE_URL", "NODE_ENV"],
-      "passThroughEnv": ["DATABASE_URL"]
+      "passThroughEnv": [
+        "API_BASE_URL",
+        "DATABASE_URL",
+        "JWT_SECRET",
+        "PORT",
+        "CORS_ORIGIN",
+        "TRUST_PROXY",
+        "NODE_ENV",
+        "SUPABASE_STORAGE_PUBLIC_URL"
+      ]
     },
     "dev": {
       "cache": false,
