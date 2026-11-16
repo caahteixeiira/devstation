@@ -3,6 +3,8 @@ import type {
   UpdateProjectBody,
 } from "./project.schema.js";
 import { AppError } from "../../errors/AppError.js";
+import { serializeProjectImage } from "./project-image.serializer.js";
+import { cleanupWarning } from "../media/storage.service.js";
 import {
   createProject,
   deleteProjectBySlug,
@@ -20,7 +22,8 @@ export async function deleteExistingProject(slug: string) {
     throw new AppError("Project not found.", 404);
   }
 
-  await deleteProjectBySlug(slug);
+  const project = await deleteProjectBySlug(slug);
+  await cleanupWarning(`projects/${project.id}/`);
 }
 
 export async function listProjects() {
@@ -28,7 +31,8 @@ export async function listProjects() {
 }
 
 export async function getProjectBySlug(slug: string) {
-  return findProjectBySlug(slug);
+  const project = await findProjectBySlug(slug);
+  return project ? { ...project, images: project.images.map(serializeProjectImage) } : null;
 }
 
 export async function createNewProject(data: CreateProjectBody) {

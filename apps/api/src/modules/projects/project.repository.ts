@@ -1,5 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
 import type { CreateProjectBody, UpdateProjectBody } from "./project.schema.js";
+import { lockProject } from "./project-image.repository.js";
+import { queueDeletion } from "../media/storage.repository.js";
 
 export async function findAllProjects() {
   return prisma.project.findMany({
@@ -28,7 +30,7 @@ export async function findAllProjects() {
 }
 
 export async function findProjectBySlug(slug: string) {
-  return prisma.project.findUnique({
+  const project = await prisma.project.findUnique({
     where: {
       slug,
     },
@@ -51,9 +53,7 @@ export async function findProjectBySlug(slug: string) {
         },
       },
       images: {
-        orderBy: {
-          order: "asc",
-        },
+        orderBy: [{ order: "asc" }, { id: "asc" }],
       },
       decisions: true,
       articles: {
@@ -77,6 +77,7 @@ export async function findProjectBySlug(slug: string) {
       },
     },
   });
+  return project;
 }
 
 export async function createProject(data: CreateProjectBody) {
@@ -171,77 +172,85 @@ export async function updateProjectBySlug(
   const { technologyIds, features, improvements, images, ...projectData } =
     data;
 
-  return prisma.project.update({
-    where: {
-      slug,
-    },
-
-    data: {
-      ...projectData,
-
-      ...(technologyIds !== undefined && {
-        technologies: {
-          set: technologyIds.map((id) => ({ id })),
-        },
-      }),
-
-      ...(features !== undefined && {
-        features: {
-          deleteMany: {},
-          create: features.map((feature, order) => ({
-            ...feature,
-            order,
-          })),
-        },
-      }),
-
-      ...(improvements !== undefined && {
-        improvements: {
-          deleteMany: {},
-          create: improvements.map((description, order) => ({
-            description,
-            order,
-          })),
-        },
-      }),
-
-      ...(images !== undefined && {
-        images: {
-          deleteMany: {},
-          create: images.map((image, order) => ({
-            ...image,
-            order,
-          })),
-        },
-      }),
-    },
-
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      summary: true,
-      status: true,
-      githubUrl: true,
-      demoUrl: true,
-
-      technologies: {
-        select: {
-          id: true,
-          name: true,
-          category: true,
-        },
+  return prisma.$transaction(async (tx) => {
+    await lockProject(tx, slug);
+    // Legacy URL arrays may replace legacy rows only. Managed images have
+    // dedicated endpoints, so saving editorial content cannot erase uploads.
+    const legacyImages = images?.filter((image) => !image.imageUrl.includes("/storage/v1/object/"));
+    return tx.project.update({
+      where: {
+        slug,
       },
 
-      updatedAt: true,
-    },
+      data: {
+        ...projectData,
+
+        ...(technologyIds !== undefined && {
+          technologies: {
+            set: technologyIds.map((id) => ({ id })),
+          },
+        }),
+
+        ...(features !== undefined && {
+          features: {
+            deleteMany: {},
+            create: features.map((feature, order) => ({
+              ...feature,
+              order,
+            })),
+          },
+        }),
+
+        ...(improvements !== undefined && {
+          improvements: {
+            deleteMany: {},
+            create: improvements.map((description, order) => ({
+              description,
+              order,
+            })),
+          },
+        }),
+
+        ...(legacyImages !== undefined && {
+          images: {
+            deleteMany: { imagePath: null },
+            create: legacyImages.map((image, order) => ({
+              ...image,
+              order,
+            })),
+          },
+        }),
+      },
+
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        summary: true,
+        status: true,
+        githubUrl: true,
+        demoUrl: true,
+
+        technologies: {
+          select: {
+            id: true,
+            name: true,
+            category: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
   });
 }
 
 export async function deleteProjectBySlug(slug: string) {
-  return prisma.project.delete({
-    where: {
-      slug,
-    },
+  const project = await prisma.$transaction(async (tx) => {
+    const current = await lockProject(tx, slug);
+    const images = await tx.projectImage.findMany({ where: { projectId: current.id } });
+    for (const image of images) if (image.imagePath) await queueDeletion(tx, image.imagePath);
+    return tx.project.delete({ where: { slug } });
   });
+  return project;
 }
