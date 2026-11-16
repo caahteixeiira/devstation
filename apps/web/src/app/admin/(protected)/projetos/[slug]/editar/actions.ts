@@ -42,7 +42,10 @@ export async function updateProjectAction(
     };
   }
 
-  const parsed = updateProjectBodySchema.safeParse(form.data);
+  // Images have their own endpoints; an editorial save must not overwrite them.
+  const editorialData: Partial<typeof form.data> = { ...form.data };
+  delete editorialData.images;
+  const parsed = updateProjectBodySchema.safeParse(editorialData);
 
   if (!parsed.success) {
     return {

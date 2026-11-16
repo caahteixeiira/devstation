@@ -6,7 +6,6 @@ import { useActionState, useState } from "react";
 import { createProjectAction, type CreateProjectActionState } from "./actions";
 import type { Technology } from "@/types/technology";
 import { ProjectFeaturesFields } from "./ProjectFeaturesFields";
-import { ProjectImagesFields } from "./ProjectImagesFields";
 import type { ProjectDetail } from "@/types/project";
 
 type ProjectFormValues = typeof initialValues;
@@ -300,10 +299,7 @@ export function ProjectForm({
           </div>
         </AdminFormSection>
         <AdminFormSection id="project-section-4" title="Imagens e links">
-          <ProjectImagesFields
-            errors={state.fieldErrors?.images}
-            initialImages={initialProject?.images}
-          />
+          <p className="text-sm text-foreground-muted">{initialProject ? "Use o gerenciador abaixo para enviar, substituir, ordenar ou remover imagens." : "Salve o projeto para enviar imagens pelo gerenciador na página de edição."}</p>
           <div>
             <label htmlFor="githubUrl" className="block text-sm font-medium">
               URL do GitHub — opcional

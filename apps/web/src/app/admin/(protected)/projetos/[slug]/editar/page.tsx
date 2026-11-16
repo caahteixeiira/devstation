@@ -8,6 +8,7 @@ import { getProjectBySlug } from "@/services/projects.service";
 import { listTechnologies } from "@/services/technologies.service";
 import { ProjectForm } from "../../novo/CreateProjectForm";
 import { updateProjectAction } from "./actions";
+import { ImageManager } from "@/components/admin/ImageManager";
 
 export const metadata: Metadata = {
   title: "Editar projeto",
@@ -45,6 +46,7 @@ export default async function EditProjectPage({
         submitLabel="Salvar alterações"
         pendingLabel="Salvando…"
       />
+      <ImageManager kind="project" slug={project.slug} images={project.images} />
     </section>
   );
 }

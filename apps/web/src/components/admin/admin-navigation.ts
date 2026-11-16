@@ -1,6 +1,7 @@
 import { BookIcon, CalendarIcon, CodeIcon, FlaskIcon, FolderIcon, HomeIcon, UserIcon } from "@/components/ui/icons";
 
 export const adminNavigation = [
+  { href: "/admin/certificacoes", label: "Certificações", description: "Certificados, competências e imagens.", icon: BookIcon },
   { href: "/admin", label: "Dashboard", description: "Atalhos para o seu espaço de trabalho.", icon: HomeIcon },
   { href: "/admin/projetos", label: "Projetos", description: "Cases, estrutura técnica e decisões de cada projeto.", icon: FolderIcon },
   { href: "/admin/tecnologias", label: "Tecnologias", description: "Catálogo de tecnologias usadas no portfólio.", icon: CodeIcon },

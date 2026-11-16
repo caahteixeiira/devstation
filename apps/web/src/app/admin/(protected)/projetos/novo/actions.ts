@@ -42,8 +42,10 @@ export async function createProjectAction(
     };
   }
 
+  let savedSlug: string;
   try {
-    await createProject(parsed.data, token);
+    const project = await createProject(parsed.data, token);
+    savedSlug = project.slug;
   } catch (error) {
     if (error instanceof ApiError) {
       if (error.kind === "HTTP" && error.status === 401) {
@@ -83,5 +85,5 @@ export async function createProjectAction(
   revalidatePath("/admin/projetos");
   revalidatePath("/projetos");
 
-  redirect("/admin/projetos");
+  redirect(`/admin/projetos/${encodeURIComponent(savedSlug)}/editar`);
 }
