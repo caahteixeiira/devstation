@@ -14,6 +14,10 @@ import jwt from "@fastify/jwt";
 import { authConfig } from "./config/auth.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { readServerConfig } from "./config/server.js";
+import multipart from "@fastify/multipart";
+import { MAX_IMAGE_BYTES } from "./config/storage.js";
+import { certificationRoutes } from "./modules/certifications/certification.routes.js";
+import { mediaRoutes } from "./modules/media/media.routes.js";
 
 const serverConfig = readServerConfig();
 
@@ -57,6 +61,12 @@ await app.register(experiencesRoutes);
 await app.register(roadmapRoutes);
 await app.register(experimentsRoutes);
 await app.register(decisionsRoutes);
+await app.register(multipart, {
+  preservePath: true,
+  limits: { fileSize: MAX_IMAGE_BYTES, files: 1, fields: 2, parts: 3, fieldSize: 2000, fieldNameSize: 100, headerPairs: 20 },
+});
+await app.register(certificationRoutes);
+await app.register(mediaRoutes);
 
 const start = async () => {
   try {
@@ -71,6 +81,10 @@ const start = async () => {
 };
 
 app.setErrorHandler((error, _request, reply) => {
+  if (error instanceof Error && "code" in error && typeof error.code === "string" && error.code.startsWith("FST_")) {
+    const tooLarge = /TOO_LARGE|LIMIT/.test(error.code);
+    return reply.status(tooLarge ? 413 : 400).send({ message: tooLarge ? "Upload exceeds the allowed limits (one image, maximum 5 MB)." : "Invalid request payload." });
+  }
   if (error instanceof Error && "statusCode" in error && error.statusCode === 429) {
     return reply.status(429).send({ message: "Too many login attempts. Try again later." });
   }
