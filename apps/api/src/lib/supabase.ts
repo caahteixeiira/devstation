@@ -19,7 +19,7 @@ class SupabaseStorage {
     let config: ReturnType<typeof readStorageConfig>;
     try { config = readStorageConfig(); }
     catch { throw new AppError("Image storage is not configured.", 503); }
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+    const key = process.env.SUPABASE_SECRET_KEY?.trim();
     if (!key) throw new AppError("Image storage is not configured.", 503);
     const headers = new Headers(init.headers);
     headers.set("Authorization", `Bearer ${key}`);

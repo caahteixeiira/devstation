@@ -89,7 +89,7 @@ before(async () => {
   process.env.NODE_ENV = "test";
   process.env.SUPABASE_URL = `http://127.0.0.1:${http.address().port}`;
   process.env.SUPABASE_STORAGE_BUCKET = "portfolio";
-  process.env.SUPABASE_SERVICE_ROLE_KEY = "test-only-key";
+  process.env.SUPABASE_SECRET_KEY = "test-only-key";
   image = await sharp({ create: { width: 10, height: 10, channels: 3, background: "white" } }).png().toBuffer();
   app = Fastify(); app.decorateRequest("authUser", null);
   await app.register(jwt, { secret: "local-test-only-jwt-key-with-enough-length" });
